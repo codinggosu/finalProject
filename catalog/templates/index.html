@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Recoduct</h1>
+    <h2>당신을 위한 맞춤형 화장품 추천 서비스 </h2>
+    <p> Recommend cosmetic product - <em> Recoduct </em> </p>
+  <h2>데이터 목록 :</h2>
+  <ul>
+    <li><strong>상품 종류:</strong> {{ item }}</li>
+    <li><strong>유저 숫자:</strong> {{ user }}</li>
+    <li><strong>등록된 평점:</strong> {{ rate }}</li>
+  </ul>
+{% endblock %}

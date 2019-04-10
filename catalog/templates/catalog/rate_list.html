@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>평가 목록</h1>
+  {% if rate_list %}
+  <ul>
+    {% for rate in rate_list %}
+      <li>
+        <a href="#">제품 번호 : {{ rate.item_id }}</a><a href="#">  유저 ID: {{ rate.user_id }}</a> 평점 : {{ rate.rate }}
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p> 등록된 평가가 없습니다.</p>
+  {% endif %}
+{% endblock %}

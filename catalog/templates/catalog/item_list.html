@@ -1,0 +1,56 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>평점 입력하기</h1>
+  {% if item_list %}
+  <ul>
+  <form action="save_rate" method="post" class="check_multi_form">{% csrf_token %}
+      <h5>Enter your user id: <input type="integer" id="user_id" name="user_id"></h5>
+    {% for item in item_list %}
+      <li>
+        <a href="#">{{ item.name }}</a> ({{item.brand}})
+        <img src="{{ item.image }}">
+            <table>
+                <tr style="display : none;">
+                    <td>Item_id</td>
+                    <td><input type="integer" class="item" id="i{{ item.item_id }}" value="{{ item.item_id }}" name="item_id"></td>
+                </tr>
+                <tr>
+                    <td>Enter your rate for this item: </td>
+                    <td><input type="integer" class="rate" id="{{ item.item_id }}" name="rate"></td>
+
+                </tr>
+             </table>
+    {% endfor %}
+             <button type="sumbit" value="submit">제출하기</button>
+      </form>
+  </ul>
+  {% else %}
+    <p> 등록된 제품이 없습니다.</p>
+  {% endif %}
+
+    <script>
+        $('.check_multi_form').submit(function(e) {
+                e.preventDefault();
+                var url = '{% url "save_rate" %}'
+                var ls = document.getElementsByClassName("rate");
+                for (i=0;i<ls.length;i++) {
+                    if (ls[i].value){
+                        var item = ls[i]['id']
+                        var user = document.getElementById('user_id').value
+                        var rate = document.getElementById(item).value
+                        var data = {
+                            content : {'item_id': item,'user_id':user,'rate':rate}
+                        };
+
+                        $.post(url,data)
+                            .done(function(r){
+                            })
+                            .fail(function(){
+                                alert('다시 확인해 보실래요? :( ')
+                            })
+                    }
+                }}
+        )
+    </script>
+{% endblock %}

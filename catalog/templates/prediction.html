@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>당신을 위한 제품 추천 받기!</h1>
+    <table>
+        <form action="prediction_result" method="post">{% csrf_token %}
+            <fieldset>
+                <tr>
+                    <td>Enter your id: </td>
+                    <td><input type="integer" name="user_id"></td>
+                    <td><input type="submit" value="Submit"></td>
+                </tr>
+            </fieldset>
+        </form>
+    </table>
+{% endblock %}

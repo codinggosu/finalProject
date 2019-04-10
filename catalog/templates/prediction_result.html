@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>당신을 위한 추천 제품 목록</h1>
+    <ul>
+    {% if predictions %}
+        {% for prediction in predictions %}
+            {% for item in items %}
+                {% if prediction.item_id == item.item_id %}
+                    <li><strong>제품 명: {{ item.name }}</strong><img src="{{ item.image }}"></li>
+                    <li><strong>예상 평점:</strong> {{ prediction.prediction }}</li>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        넌 15개의 제품에 대한 평점을 입력하지 않았지 :(
+    {% endif %}
+    </ul>
+{% endblock %}

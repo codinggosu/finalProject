@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1> 평점을 입력하세요. </h1>
+<form action="save_rate" method="post">
+    {% csrf_token %}
+    {{ form|linebreaks }}
+    <input type="submit" value="submit" name="submit">
+</form>
+{% endblock %}

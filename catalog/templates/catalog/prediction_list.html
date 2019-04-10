@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>예상 평점 목록</h1>
+  {% if prediction_list %}
+  <ul>
+    {% for prediction in prediction_list %}
+      <li>
+        <a href="#">제품 번호 : {{ prediction.item_id }}</a><a href="#">  유저 ID: {{ prediction.user_id }}</a> 평점 : {{ prediction.prediction }}
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p> 예측 결과가 없습니다.</p>
+  {% endif %}
+{% endblock %}
