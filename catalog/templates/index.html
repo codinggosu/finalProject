@@ -1,7 +1,8 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Recoduct</h1>
+  <div class="page_title">Recoduct</div>
+    <div class="page_body">
     <h2>당신을 위한 맞춤형 화장품 추천 서비스 </h2>
     <p> Recommend cosmetic product - <em> Recoduct </em> </p>
   <h2>데이터 목록 :</h2>
@@ -10,4 +11,6 @@
     <li><strong>유저 숫자:</strong> {{ user }}</li>
     <li><strong>등록된 평점:</strong> {{ rate }}</li>
   </ul>
+<p>{% if request.session.user_id %}안녕하세요 {{ request.session.user_id }}번 이용자님 ^_^ {% else %}안녕하세요 ~ Recoduct 가 처음이시면 회원가입 부탁드립니다 ~ {% endif%}</p>
+    </div>
 {% endblock %}

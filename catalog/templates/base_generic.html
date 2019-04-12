@@ -21,12 +21,13 @@
       {% block sidebar %}
         <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">홈</a></li>
+          <li><a href="{% url 'sign_up_page' %}">회원 가입 하기</a></li>
           <li><a href="{% url 'items' %}">평점입력하기</a></li>
           <li><a href="{% url 'prediction' %}">예측 하러 가기</a></li>
         </ul>
      {% endblock %}
       </div>
-      <div class="col-sm-10 ">
+      <div class="col-sm-10">
           {% block content %}{% endblock %}
       {% block pagination %}
           {% if is_paginated %}

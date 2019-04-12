@@ -12,12 +12,23 @@ html {
   -webkit-text-size-adjust: 100%; /* 2 */
 }
 
+.col-sm-10  {
+  margin-top: 20px;
+}
+
+
+.sidebar-nav {
+    margin-top: 30px;
+    padding: 0;
+    list-style: none;
+}
 /**
  * Remove default margin.
  */
 
-body {
-  margin: 0;
+.page_body {
+  margin: 20px;
+  padding: 20px;
 }
 
 /* HTML5 display definitions
@@ -135,6 +146,15 @@ dfn {
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
+}
+
+.page_title
+{
+  text-align: center;
+  font-size: 50px;
+  padding: 10px;
+  width: 70%;
+  background-color: hotpink;
 }
 
 /**

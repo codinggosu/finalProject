@@ -1,16 +1,19 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>당신을 위한 제품 추천 받기!</h1>
+  <div class="page_title">당신을 위한 제품 추천 받기!</div>
+    <div class="page_body">
     <table>
         <form action="prediction_result" method="post">{% csrf_token %}
             <fieldset>
                 <tr>
+                    <div>추천을 위해, 10초 정도의 시간이 필요합니다 :) </div>
                     <td>Enter your id: </td>
-                    <td><input type="integer" name="user_id"></td>
+                    <td><input type="integer" name="user_id" {% if request.session.user_id %} value="{{ request.session.user_id }}" {% endif %}></td>
                     <td><input type="submit" value="Submit"></td>
                 </tr>
             </fieldset>
         </form>
     </table>
+    </div>
 {% endblock %}

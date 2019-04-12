@@ -1,11 +1,12 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>평점 입력하기</h1>
+  <div class="page_title">평점 입력하기</div>
+    <div class="page_body">
   {% if item_list %}
   <ul>
   <form action="save_rate" method="post" class="check_multi_form">{% csrf_token %}
-      <h5>Enter your user id: <input type="integer" id="user_id" name="user_id"></h5>
+      <h5>Enter your user id: <input type="integer" id="user_id" name="user_id"  {% if request.session.user_id %} value="{{ request.session.user_id }}"{% endif %}></h5>
     {% for item in item_list %}
       <li>
         <a href="#">{{ item.name }}</a> ({{item.brand}})
@@ -28,6 +29,7 @@
   {% else %}
     <p> 등록된 제품이 없습니다.</p>
   {% endif %}
+    </div>
 
     <script>
         $('.check_multi_form').submit(function(e) {
@@ -49,6 +51,7 @@
                             .fail(function(){
                                 alert('다시 확인해 보실래요? :( ')
                             })
+
                     }
                 }}
         )

@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="page_title">Sign up</div>
+    <div class="page_body">
+  <form action="sign_up" method="post">{% csrf_token %}
+      <h5>Enter your user id: <input type="integer" name="user_id"></h5>
+            <table>
+                    <div>Enter your skin type (건성, 중성, 지성, 복합성, 민감성)  <input type="string" name="skin_type"></div>
+                    <div>Enter your age <input type="integer" name="age"> </div>
+                    <div>Enter your gender (f, m) <input type="string" name="gender"> </div>
+            </table>
+      <button type="sumbit" value="submit">submit</button>
+  </form>
+    </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<h1> 평점을 입력하세요. </h1>
+<div class="page_title"> 평점을 입력하세요. </div>
 <form action="save_rate" method="post">
     {% csrf_token %}
     {{ form|linebreaks }}
