@@ -15,4 +15,5 @@ urlpatterns = [
     path('sign_up_page', views.sign_up_page, name='sign_up_page'),
     path('test', views.test, name='test'),
     path('mypage', views.my_page, name='my_page'),
+    path('friend', views.friend, name='friend'),
 ]

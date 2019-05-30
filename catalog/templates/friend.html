@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="page_title">당신을 위한 추천 친구 목록</div>
+    <div class="page_body">
+    <ul>
+    {% if neighbors %}
+        {% for neighbor in neighbors %}
+            <li><strong>명: {{ neighbor }}</strong></li>
+        {% endfor %}
+    {% else %}
+        넌 충분한 숫자의 평점을 입력하지 않았지 :(
+    {% endif %}
+    </ul>
+    </div>
+{% endblock %}

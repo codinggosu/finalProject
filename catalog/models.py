@@ -8,14 +8,14 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=50, null=True)
     image = models.TextField(null=True)
-    content = models.TextField(null=True)
+    texts = models.TextField(null=True)
 
     def __str__(self):
         return self.name
 
 
 class Rate(models.Model):
-    content = models.TextField(blank=False, null=True)
+    review = models.TextField(blank=False, null=True)
     rate = models.IntegerField(blank=False, null=False)
     item_id = models.IntegerField(blank=False, null=False)
     user_id = models.IntegerField(blank=False, null=False)

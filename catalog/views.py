@@ -10,7 +10,7 @@ from surprise import Dataset
 from surprise import Reader
 from surprise.model_selection import cross_validate
 from surprise import SVD
-from surprise import BaselineOnly
+from surprise import BaselineOnly, KNNBaseline
 from surprise.model_selection import cross_validate, KFold
 from surprise.model_selection import GridSearchCV
 from surprise import accuracy
@@ -19,10 +19,8 @@ from django.db import connections
 import pickle
 import os
 
-
 def index(request):
     """View function for home page of site."""
-
     item = Item.objects.all().count()
     user = User.objects.all().count()
     rate = Rate.objects.all().count()
@@ -35,7 +33,6 @@ def index(request):
         'rate': rate,
         'num_visits': num_visits,
     }
-
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
 
@@ -87,29 +84,20 @@ def get_top_n(predictions, n=10, given_user_id=0):
         type_dict = pickle.load(f)
 
     top_n = defaultdict(list)
-    if given_user_id == 0:
-        for uid, iid, true_r, est, _ in predictions:
-            top_n[uid].append((iid, est))
+    user = User.objects.filter(user_id=given_user_id).values('skin_type')
+    print(user)
+    skin_type = user[0]['skin_type']
+    minus_list = type_dict[skin_type]
+    for uid, iid, true_r, est, _ in predictions:
+        if uid == given_user_id:
+            if iid in minus_list:
+                top_n[uid].append((iid, est - 1))
+            else:
+                top_n[uid].append((iid, est))
 
-        # Then sort the predictions for each user and retrieve the k highest ones.
-        for uid, user_ratings in top_n.items():
-            user_ratings.sort(key=lambda x: x[1], reverse=True)
-            top_n[uid] = user_ratings[:n]
-    else:
-        user = User.objects.filter(user_id=given_user_id).values('skin_type')
-        print(user)
-        skin_type = user[0]['skin_type']
-        minus_list = type_dict[skin_type]
-        for uid, iid, true_r, est, _ in predictions:
-            if uid == given_user_id:
-                if iid in minus_list:
-                    top_n[uid].append((iid, est - 1))
-                else:
-                    top_n[uid].append((iid, est))
-
-        for uid, user_ratings in top_n.items():
-            user_ratings.sort(key=lambda x: x[1], reverse=True)
-            top_n[uid] = user_ratings[:n]
+    for uid, user_ratings in top_n.items():
+        user_ratings.sort(key=lambda x: x[1], reverse=True)
+        top_n[uid] = user_ratings[:n]
 
     return top_n
 
@@ -120,11 +108,8 @@ def recommend(given_user_id):
     query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
     df = pd.read_sql_query(query, con=connections['default'], params=params)
     print("load df")
-    users = list(df['user_id'].value_counts()[lambda x: x >= 5].index)
-    products = list(df['item_id'].value_counts()[lambda x: x > 20].index)
-    new_df = df[(df['user_id'].isin(users)) & df['item_id'].isin(products)]
     reader = Reader(rating_scale=(1, 5))
-    data = Dataset.load_from_df(new_df[['user_id', 'item_id', 'rate']], reader)
+    data = Dataset.load_from_df(df[['user_id', 'item_id', 'rate']], reader)
     trainset = data.build_full_trainset()
     testset = trainset.build_anti_testset()
     algo = SVD()
@@ -134,15 +119,6 @@ def recommend(given_user_id):
     print("예측 완료")
     top_10_items = get_top_n(predictions, 10, given_user_id)
     print("top 10 선별 완료, 길이 : %s" % len(list(top_10_items.keys())))
-#    if given_user_id == 0:
-#        for user_id, item_predictions in top_10_items.items():
-#            for item_prediction in item_predictions:
-#                obj = Prediction(user_id=user_id, item_id=item_prediction[0], prediction=item_prediction[1])
-#                obj.save()
-#        print("전체 유저에 대한 예측 저장 완료")
-#        return [item_prediction[0] for user_id, item_predictions in top_10_items.items() for item_prediction in
-#                item_predictions]
-#    else:
     print(top_10_items[given_user_id])
     for item_prediction in top_10_items[given_user_id]:
         if Prediction.objects.filter(item_id=item_prediction[0], user_id=given_user_id):
@@ -154,6 +130,35 @@ def recommend(given_user_id):
     return [item_prediction[0] for item_prediction in top_10_items[given_user_id]]
 
 
+def recommend_friend(given_user_id):
+    queryset = Rate.objects.all()
+    query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
+    df = pd.read_sql_query(query, con=connections['default'], params=params)
+    reader = Reader(rating_scale=(1, 5))
+    data = Dataset.load_from_df(df[['user_id', 'item_id', 'rate']], reader)
+    trainset = data.build_full_trainset()
+    sim_options = {'name': 'pearson_baseline'}
+    algo = KNNBaseline(sim_options=sim_options)
+    algo.fit(trainset)
+
+    inner_id = algo.trainset.to_inner_uid(given_user_id)
+#    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
+    neighbors = algo.get_neighbors(inner_id, k=5)
+    results = [algo.trainset.to_raw_uid(inner_user_id) for inner_user_id in neighbors]
+    print('The 5 nearest neighbors of Given User Id:')
+    for inner_user_id in neighbors:
+        print(algo.trainset.to_raw_uid(inner_user_id))
+    return results
+
+
+def friend(request):
+    neighbor_id_list = recommend_friend(971012)
+
+    context = {
+        'neighbors': neighbor_id_list,
+    }
+
+    return render(request, "friend.html", context=context)
 
 
 def prediction(request):
