@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -15,7 +16,7 @@ class Item(models.Model):
 
 
 class Rate(models.Model):
-    content = models.TextField(blank=False, null=True)
+    review = models.TextField()
     rate = models.IntegerField(blank=False, null=False)
     item_id = models.IntegerField(blank=False, null=False)
     user_id = models.IntegerField(blank=False, null=False)
@@ -23,7 +24,15 @@ class Rate(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.item_id.name}:{self.user_id.user_id}'
+        return self.review[:20] + " ... "
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this Article."""
+        return reverse('rate-detail', args=[str(self.id)])
+    def get_user(self):
+        return User.objects.get(user_id=self.user_id)
+    def get_item_pic(self):
+        return Item.objects.get(item_id=self.item_id)
 
 
 class User(models.Model):
@@ -73,5 +82,3 @@ class Prediction(models.Model):
 #my page
 #ㄴ recommendation
 #ㄴ my reviews
-
-

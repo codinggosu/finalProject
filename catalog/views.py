@@ -52,7 +52,10 @@ class UserListView(generic.ListView):
 
 class RateListView(generic.ListView):
     model = Rate
-    paginate_by = 20
+    paginate_by = 10
+
+class RateDetailView(generic.DetailView):
+    model = Rate
 
 
 class PredictionListView(generic.ListView):
@@ -209,10 +212,24 @@ def save_rate(request):
         return render(request, "catalog/item_list.html")
     return HttpResponse(status=405)
 
+def display_items(request):
+    items = Item.objects.all().values('item_id')
+    return render(request, 'catalog/allitems.html', context=items[0])
+
+
 
 def test(request):
-  return render(request, 'newindex.html')
+    return render(request, 'newindex.html')
 
 
 def my_page(request):
   return render(request, 'catalog/mypage.html')
+
+
+def social(request):
+    return render(request, 'catalog/social.html')
+
+def friend_review(request):
+    rate = Rate.objects.all().count()
+
+    return render(request, 'catalog/friendreview.html')
