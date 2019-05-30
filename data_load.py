@@ -15,39 +15,37 @@ from catalog.models import Prediction
 
 
 def load_item():
-    con = sqlite3.connect("C:\dev\cosmo-hackers\glowpickDB.db")
-    item_df = pd.read_sql("SELECT product_id, name, brandName, product_image FROM innisfree", con)
+    con = sqlite3.connect("C:\dev\glowpickDB.db")
+    item_df = pd.read_sql("SELECT product_id, name, product_image FROM merged_data", con)
     return item_df
 
+
 def load_user():
-    con = sqlite3.connect("C:\dev\cosmo-hackers\glowpickDB.db")
-    user_df = pd.read_sql("SELECT user_id, age, gender, skin_type FROM innisfree", con)
+    con = sqlite3.connect("C:\dev\glowpickDB.db")
+    user_df = pd.read_sql("SELECT user_id, age, gender, skin_type, nickname, profile_image FROM merged_data", con)
     return user_df
 
-def load_rate():
-    con = sqlite3.connect("C:\dev\cosmo-hackers\glowpickDB.db")
-    rate_df = pd.read_sql("SELECT user_id, product_id, rating FROM innisfree", con)
-    return rate_df
 
-def load_prediction():
-    con = sqlite3.connect("C:\dev\cosmo-hackers\predictionDB.db")
-    prediction_df = pd.read_sql("SELECT user, item, estimated_value FROM prediction", con)
-    return prediction_df
+def load_rate():
+    con = sqlite3.connect("C:\dev\glowpickDB.db")
+    rate_df = pd.read_sql("SELECT user_id, product_id, rating, contents, created_at FROM merged_data", con)
+    return rate_df
 
 
 if __name__=='__main__':
     item_df = load_item()
     for idx in range(len(item_df)):
-        Item(item_id=item_df.iloc[idx, 0], name=item_df.iloc[idx, 1], brand=item_df.iloc[idx, 2], image=item_df.iloc[idx, 3]).save()
+        Item(item_id=item_df.iloc[idx, 0], name=item_df.iloc[idx, 1], image=item_df.iloc[idx, 2], brand='이니스프리').save()
     print("완료")
     user_df = load_user()
     for idx in range(len(user_df)):
-        User(user_id=user_df.iloc[idx, 0], age=user_df.iloc[idx, 1], gender=user_df.iloc[idx, 2], skin_type=user_df.iloc[idx, 3]).save()
+        User(user_id=user_df.iloc[idx, 0], age=user_df.iloc[idx, 1], gender=user_df.iloc[idx, 2], skin_type=user_df.iloc[idx, 3], nickname=user_df.iloc[idx, 4], profile=user_df.iloc[idx, 5]).save()
     print("완료")
     rate_df = load_rate()
     for idx in range(len(rate_df)):
-        Rate(user_id=rate_df.iloc[idx, 0], item_id=rate_df.iloc[idx, 1], rate=rate_df.iloc[idx, 2]).save()
+        Rate(user_id=rate_df.iloc[idx, 0], item_id=rate_df.iloc[idx, 1], rate=rate_df.iloc[idx, 2], content=rate_df.iloc[idx, 3], created_at=rate_df.iloc[idx, 4]).save()
     print("완료")
+
 #prediction_df = load_prediction()
 #for idx in range(len(prediction_df)):
 #Prediction(user_id=prediction_df.iloc[idx, 0], item_id=prediction_df.iloc[idx, 1], prediction=prediction_df.iloc[idx, 2]).save()

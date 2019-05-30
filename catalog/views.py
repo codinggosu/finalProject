@@ -17,6 +17,7 @@ from surprise import accuracy
 from collections import defaultdict
 from django.db import connections
 import pickle
+import os
 
 
 def index(request):
@@ -78,7 +79,11 @@ def save_rate(request):
 
 def get_top_n(predictions, n=10, given_user_id=0):
     # First map the predictions to each user.
-    with open("C:\\dev\\web_dev\\recoduct\\type_dict.pickle", 'rb') as f:
+    # with open("type_dict.pickle", 'rb') as f:
+    parent_dir = os.path.split(os.getcwd())[0]
+    # with open(os.path.join(parent_dir, "type_dict.pickle")) as f:
+    #     type_dict = pickle.load(f)
+    with open("type_dict.pickle") as f:
         type_dict = pickle.load(f)
 
     top_n = defaultdict(list)
@@ -115,7 +120,7 @@ def recommend(given_user_id):
     query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
     df = pd.read_sql_query(query, con=connections['default'], params=params)
     print("load df")
-    users = list(df['user_id'].value_counts()[lambda x: x >= 15].index)
+    users = list(df['user_id'].value_counts()[lambda x: x >= 5].index)
     products = list(df['item_id'].value_counts()[lambda x: x > 20].index)
     new_df = df[(df['user_id'].isin(users)) & df['item_id'].isin(products)]
     reader = Reader(rating_scale=(1, 5))
@@ -205,4 +210,9 @@ def save_rate(request):
     return HttpResponse(status=405)
 
 
+def test(request):
+  return render(request, 'newindex.html')
 
+
+def my_page(request):
+  return render(request, 'catalog/mypage.html')
