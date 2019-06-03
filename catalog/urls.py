@@ -18,6 +18,6 @@ urlpatterns = [
     path('social', views.social, name='social'),
     path('friend_review', views.friend_review, name='friend_review'),
     path('rate-detail/<int:pk>', views.RateDetailView.as_view(), name='rate-detail'),
-    path('allitems', views.display_items, name='allitems'),
+    path('allitems', views.all_items, name='allitems'),
 
 ]

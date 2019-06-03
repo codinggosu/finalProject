@@ -9,14 +9,15 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=50, null=True)
     image = models.TextField(null=True)
-    content = models.TextField(null=True)
+    texts = models.TextField(null=True)
 
     def __str__(self):
         return self.name
 
 
 class Rate(models.Model):
-    review = models.TextField()
+    content = "just testing content for rate model, confliction with views.save_rate"
+    review = models.TextField(blank=False, null=True)
     rate = models.IntegerField(blank=False, null=False)
     item_id = models.IntegerField(blank=False, null=False)
     user_id = models.IntegerField(blank=False, null=False)
@@ -31,8 +32,10 @@ class Rate(models.Model):
         return reverse('rate-detail', args=[str(self.id)])
     def get_user(self):
         return User.objects.get(user_id=self.user_id)
-    def get_item_pic(self):
+    def get_item(self):
         return Item.objects.get(item_id=self.item_id)
+    def get_item_pic(self):
+        return Item.objects.get(item_id=self.item_id).image
 
 
 class User(models.Model):
