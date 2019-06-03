@@ -78,26 +78,12 @@ def save_rate(request):
     return HttpResponse(status=405)
 
 
-def get_top_n(predictions, n=10, given_user_id=0):
-    # First map the predictions to each user.
-    # with open("type_dict.pickle", 'rb') as f:
-    parent_dir = os.path.split(os.getcwd())[0]
-    # with open(os.path.join(parent_dir, "type_dict.pickle")) as f:
-    #     type_dict = pickle.load(f)
-    with open("type_dict.pickle") as f:
-        type_dict = pickle.load(f)
+def get_top_n(predictions, n, given_user_id):
 
     top_n = defaultdict(list)
-    user = User.objects.filter(user_id=given_user_id).values('skin_type')
-    print(user)
-    skin_type = user[0]['skin_type']
-    minus_list = type_dict[skin_type]
     for uid, iid, true_r, est, _ in predictions:
         if uid == given_user_id:
-            if iid in minus_list:
-                top_n[uid].append((iid, est - 1))
-            else:
-                top_n[uid].append((iid, est))
+            top_n[uid].append((iid, est))
 
     for uid, user_ratings in top_n.items():
         user_ratings.sort(key=lambda x: x[1], reverse=True)
@@ -108,6 +94,7 @@ def get_top_n(predictions, n=10, given_user_id=0):
 
 def recommend(given_user_id):
     given_user_id = int(given_user_id)
+    print(given_user_id)
     queryset = Rate.objects.all()
     query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
     df = pd.read_sql_query(query, con=connections['default'], params=params)
@@ -134,44 +121,13 @@ def recommend(given_user_id):
     return [item_prediction[0] for item_prediction in top_10_items[given_user_id]]
 
 
-def recommend_friend(given_user_id):
-    queryset = Rate.objects.all()
-    query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
-    df = pd.read_sql_query(query, con=connections['default'], params=params)
-    reader = Reader(rating_scale=(1, 5))
-    data = Dataset.load_from_df(df[['user_id', 'item_id', 'rate']], reader)
-    trainset = data.build_full_trainset()
-    sim_options = {'name': 'pearson_baseline'}
-    algo = KNNBaseline(sim_options=sim_options)
-    algo.fit(trainset)
-
-    inner_id = algo.trainset.to_inner_uid(given_user_id)
-#    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
-    neighbors = algo.get_neighbors(inner_id, k=5)
-    results = [algo.trainset.to_raw_uid(inner_user_id) for inner_user_id in neighbors]
-    print('The 5 nearest neighbors of Given User Id:')
-    for inner_user_id in neighbors:
-        print(algo.trainset.to_raw_uid(inner_user_id))
-    return results
-
-
-def friend(request):
-    neighbor_id_list = recommend_friend(971012)
-
-    context = {
-        'neighbors': neighbor_id_list,
-    }
-
-    return render(request, "friend.html", context=context)
-
-
 def prediction(request):
     return render(request, "prediction.html")
 
 
 def prediction_result(request):
-    if request.session.get('user_id', False):
-        user_id = request.session.get('user_id', False)
+    user_id = request.POST.get('uid')
+    print(user_id)
     item_id_list = recommend(user_id)
     print(item_id_list)
     predictions = Prediction.objects.filter(user_id=user_id).order_by('-prediction')
@@ -180,6 +136,52 @@ def prediction_result(request):
         'predictions': predictions,
         'items': items
     }
+    return render(request, "prediction_result.html", context=context)
+
+
+def recommend_friend(given_user_id):
+    queryset = Rate.objects.all()
+    query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
+    df = pd.read_sql_query(query, con=connections['default'], params=params)
+    print("load data")
+    reader = Reader(rating_scale=(1, 5))
+    data = Dataset.load_from_df(df[['user_id', 'item_id', 'rate']], reader)
+    trainset = data.build_full_trainset()
+    sim_options = {'name': 'pearson_baseline'}
+    algo = KNNBaseline(sim_options=sim_options)
+    algo.fit(trainset)
+    print(given_user_id)
+    given_user_id = int(given_user_id)
+    inner_id = algo.trainset.to_inner_uid(given_user_id)
+#    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
+    neighbors = algo.get_neighbors(inner_id, k=5)
+    results = [algo.trainset.to_raw_uid(inner_user_id) for inner_user_id in neighbors]
+    print('The 5 nearest neighbors of Given User Id:')
+    for raw_user_id in results:
+        print(raw_user_id)
+        if User.objects.filter(user_id=given_user_id).candidates.set().filter(user_id=raw_user_id):
+            pass
+        else:
+            obj = User.objects.all().filter(user_id=given_user_id).candidates.set()(user_id=raw_user_id)
+            obj.save()
+    print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
+    return results
+
+
+def friend(request):
+    return render(request, "friend.html")
+
+
+def recommended_friends(request):
+    user_id = request.POST.get('uid')
+    print(user_id)
+    recommend_friend(user_id)
+    users = User.objects.filter(user_id=user_id)
+
+    context = {
+        "users": users
+    }
+
     return render(request, "prediction_result.html", context=context)
 
 
