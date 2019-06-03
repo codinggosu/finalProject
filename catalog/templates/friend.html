@@ -1,16 +1,17 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <div class="page_title">당신을 위한 추천 친구 목록</div>
+  <div class="page_title">당신을 위한 친구 추천 받기!</div>
     <div class="page_body">
-    <ul>
-    {% if neighbors %}
-        {% for neighbor in neighbors %}
-            <li><strong>명: {{ neighbor }}</strong></li>
-        {% endfor %}
-    {% else %}
-        넌 충분한 숫자의 평점을 입력하지 않았지 :(
-    {% endif %}
-    </ul>
+    <table>
+        <form action="recommended_friends" method="post">{% csrf_token %}
+            <fieldset>
+                <tr>
+                    <td>Enter your id: </td>
+                    <td><input type="int" name="uid"></td>
+                </tr>
+            </fieldset>
+        </form>
+    </table>
     </div>
 {% endblock %}

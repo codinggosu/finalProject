@@ -34,6 +34,7 @@ class User(models.Model):
     age = models.FloatField(null=True)
     nickname = models.CharField(max_length=20, default='anonymous')
     profile = models.TextField(null=True)
+    candidates = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     def __str__(self):
         """String for representing the Model object."""

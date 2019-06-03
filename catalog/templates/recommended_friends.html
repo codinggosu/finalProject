@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="page_title">당신을 위한 추천 친구 목록</div>
+    <div class="page_body">
+    <ul>
+    {% if users %}
+        {% for user in users %}
+        <li><strong>친구 명: {{ user.nickname }}</strong><img src="{{ user.profile }}"></li>
+        {% endfor %}
+    {% else %}
+        아 모르겠다.
+    {% endif %}
+    </ul>
+    </div>
+{% endblock %}

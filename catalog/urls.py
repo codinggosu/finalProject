@@ -16,4 +16,5 @@ urlpatterns = [
     path('test', views.test, name='test'),
     path('mypage', views.my_page, name='my_page'),
     path('friend', views.friend, name='friend'),
+    path('recommended_friends', views.recommended_friends, name='recommended_friends')
 ]
