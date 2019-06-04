@@ -43,6 +43,10 @@ class ItemListView(generic.ListView):
     paginate_by = 10
 
 
+class ItemDetailView(generic.DetailView):
+    model = Item
+
+
 class UserListView(generic.ListView):
     model = User
     paginate_by = 10
@@ -208,12 +212,24 @@ def sign_up_page(request):
 
 
 def all_items(request):
-    data = serializers.serialize( "python", Item.objects.all())
-    # context = {key: "name" for key in data}
-    lst = [i['fields']['name'] for i in data]
-    print(type(data))
-    print(lst)
-    context = {"data": lst}
+    # data = serializers.serialize( "python", Item.objects.all())
+    items = Item.objects.all()
+    # print(test)
+    # ids = [item.item_id for item in items]
+    # names = [item.name for item in items]
+    # brands= [item.brand for item in items]
+    # images = [item.image for item in items]
+
+    # names = [i['fields']['name'] for i in data]
+    # brands = [i['fields']['brand'] for i in data]
+    # images = [i['fields']['image'] for i in data]
+    # texts = [i['fields']['texts'] for i in data]
+    # lst = [(i['fields']['name'], i['fields']['brand'], i['fields']['image'],i['fields']['texts'],) for i in data]
+    combined = [(item.item_id, item.name, item.brand, item.image,) for item in items]
+    context = {
+    'items':combined
+
+    }
     # print(context)
     return render(request, 'catalog/all_products.html', context)
 

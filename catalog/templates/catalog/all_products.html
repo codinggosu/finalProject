@@ -1,11 +1,27 @@
 {% extends "newindex.html" %}
 
 {% block content %}
-
-{% for item in data %}
-<p>{{ item }} </p>
+<p>allasdfasfasfaf</p>
+{% for cosmetic in items %}
+<img src="{{ cosmetic.3 }}">
+<a href="item-detail/{{ cosmetic.0 }}"> {{ cosmetic.1 }} </a>
+<p> made by: {{ cosmetic.2 }} </p>
 {% endfor %}
-<p>all oduasdasfct</p>
+{% if is_paginated %}
+<div class="pagination">
+    <span class="page-links">
+        {% if page_obj.has_previous %}
+        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="page-current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% if page_obj.has_next %}
+            <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
 <!-- <p>by {{article.author}} 님</p>
 <p>{{article.create_date.year}}년 {{article.create_date.month}} 월
      {{article.create_date.day}}일</p> -->
