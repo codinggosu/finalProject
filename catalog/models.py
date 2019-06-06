@@ -42,6 +42,7 @@ class Rate(models.Model):
     item_id = models.IntegerField(blank=False, null=False)
     user_id = models.IntegerField(blank=False, null=False)
     created_at = models.DateField(auto_now=True)
+    # new_id = models.AutoField(primary_key=True)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -58,6 +59,9 @@ class Rate(models.Model):
         return Item.objects.get(item_id=self.item_id).image
 
 
+
+
+
 class User(models.Model):
     """Model representing User."""
     user_id = models.IntegerField(primary_key=True)
@@ -67,6 +71,11 @@ class User(models.Model):
     nickname = models.CharField(max_length=20, default='anonymous')
     profile = models.TextField(null=True)
     candidates = models.ManyToManyField("self", symmetrical=False, blank=True)
+
+
+    def get_written_reviews(self):
+        return Rate.objects.filter(user_id = self.user_id)
+
 
     def __str__(self):
         """String for representing the Model object."""

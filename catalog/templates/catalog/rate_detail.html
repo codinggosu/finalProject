@@ -5,7 +5,7 @@
 <h5> {{rate.review}}</h5>
 <img src="{{ rate.get_item_pic }}">
 <p>Review of product: {{ rate.get_item }}</p>
-<p> review by: {{ rate.get_user }} </p>
+<p> review by: {{ rate.get_user }} (user id: {{ rate.get_user.user_id }})</p>
 <p> Gave Score of : {{ rate.rate}} </p>
 
 <!-- <p>by {{article.author}} 님</p>

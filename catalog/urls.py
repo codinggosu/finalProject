@@ -21,5 +21,7 @@ urlpatterns = [
     path('allitems', views.all_items, name='allitems'),
     path('item-detail/<int:pk>', views.ItemDetailView.as_view(), name='item-detail'),
     path('friend', views.friend, name='friend'),
-    path('recommended_friends', views.recommended_friends, name='recommended_friends')
+    path('recommended_friends', views.recommended_friends, name='recommended_friends'),
+    path('test_form/<int:pk>', views.test_form, name='test_form'),
+    path('user-detail/<int:pk>', views.UserDetailView.as_view(), name='user-detail')
 ]

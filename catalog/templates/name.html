@@ -1,0 +1,56 @@
+{% extends "newindex.html" %}
+
+{% block content %}
+
+<h5> {{item.name}}</h5>
+<img src="{{ item.image }}">
+<p> Product of : {{ item.brand }}</p>
+<p> Score: {{item.get_avgscore }} </p>
+<br>
+<br>
+<br>
+
+
+
+<form action="" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="fieldWrapper">
+        {{ field.errors }}
+        {{ field.label_tag }}: {{ field }}
+    </div>
+{% endfor %}
+    <input type="submit" value="Submit">
+</form>
+
+<br>
+<h3> What people say about this product: </h3>
+{% for review in item.get_reviews %}
+<a href=" {{review.get_absolute_url }}"><p>{{ review.review }}</p></a>
+{% endfor %}
+
+
+<!-- <p> this is the name.html</p>
+<h5> {{ item.name }}</h5>
+<img src="{{ item.image }}">
+<p> Prodddduct of : {{ item.brand }}</p>
+<p> Score: {{item.get_avgscore }} </p>
+<br>
+<br>
+<br>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <label for="your_review">Your name: </label>
+    <input id="your_review" type="text" name="your_review" >
+    <input type="submit" value="Submit">
+</form>
+
+
+<br>
+<h3> What people say about this product: </h3>
+{% for review in item.get_reviews %}
+<a href=" {{review.get_absolute_url }}"><p>{{ review.review }}</p></a>
+{% endfor %} -->
+
+{% endblock %}
