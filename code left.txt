@@ -1,0 +1,31 @@
+all products.html
+
+<!-- <div style="float:left; width:100px; height:100px;">
+    {{ image.whatever }}
+</div>
+<div class="col-4">
+{% for product in products %}
+<!-- <img src="{{ product.image }}" > -->
+<a href="item-detail/{{ product.item_id }}">
+<img border="0" src="{{ product.image }}" width="150" height="150">
+</a>
+<p>{{ product.name }} </p>
+<p> Brand: {{ product.brand }} </p>
+<p> Score: {{ product.get_avgscore }} </p>
+{% endfor %} -->
+
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+            <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}

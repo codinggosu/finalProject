@@ -1,27 +1,50 @@
 {% extends "newindex.html" %}
 
 {% block content %}
-{% for cosmetic in items %}
+<!-- {% for cosmetic in items %}
 <img src="{{ cosmetic.3 }}">
 <a href="item-detail/{{ cosmetic.0 }}"> {{ cosmetic.1 }} </a>
-<p> made by: {{ cosmetic.2 }} </p>
-{% endfor %}
-{% if is_paginated %}
-<div class="pagination">
-    <span class="page-links">
-        {% if page_obj.has_previous %}
-        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+<p> Brand: {{ cosmetic.2 }} </p>
+{% endfor %} -->
+
+<div >
+    {% for product in products %}
+    <!-- <img src="{{ product.image }}" > -->
+    <div style="float:left; ">
+    <a href="item-detail/{{ product.item_id }}">
+    <img border="0" src="{{ product.image }}"">
+    </a>
+    <p>{{ product.name }} </p>
+    <p> Brand: {{ product.brand }} </p>
+    <p> Score: {{ product.get_avgscore }} </p>
+    <p> Reviewed {{ product.get_numberof_reviews }} times </p>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+
+{% endblock %}
+
+{% block footer %}
+<br>
+<div class="pagination" style="position:relative; bottom:1px;">
+
+    <span class="step-links">
+        {% if products.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ contacts.previous_page_number }}">previous</a>
         {% endif %}
-        <span class="page-current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+
+        <span class="current">
+            Page {{ products.number }} of {{ products.paginator.num_pages }}.
         </span>
-        {% if page_obj.has_next %}
-            <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">next</a>
+            <a href="?page={{ products.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
-{% endif %}
-<!-- <p>by {{article.author}} 님</p>
-<p>{{article.create_date.year}}년 {{article.create_date.month}} 월
-     {{article.create_date.day}}일</p> -->
 {% endblock %}
