@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
-from .models import Item, Rate, User, Prediction, Candidates2
+from .models import Item, Rate, Profile, Prediction, Candidates2
 from django.views import generic
 from catalog.forms import RateForm
 from django.http import HttpResponse
@@ -25,7 +25,7 @@ from .forms import ReviewForm
 def index(request):
     """View function for home page of site."""
     item = Item.objects.all().count()
-    user = User.objects.all().count()
+    user = Profile.objects.all().count()
     rate = Rate.objects.all().count()
     num_visits = request.session.get('num_visits', 1)
     request.session['num_visits'] = num_visits + 1
@@ -49,10 +49,10 @@ class ItemDetailView(generic.DetailView):
     model = Item
 
 class UserDetailView(generic.DetailView):
-    model = User
+    model = Profile
 
 class UserListView(generic.ListView):
-    model = User
+    model = Profile
     paginate_by = 10
 
 
@@ -160,7 +160,7 @@ def recommend_friend(given_user_id):
     algo.fit(trainset)
     print(given_user_id)
     given_user_id = int(given_user_id)
-    _from = get_object_or_404(User, user_id=given_user_id)
+    _from = get_object_or_404(Profile, user_id=given_user_id)
     inner_id = algo.trainset.to_inner_uid(given_user_id)
 #    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
     neighbors = algo.get_neighbors(inner_id, k=5)
@@ -168,7 +168,7 @@ def recommend_friend(given_user_id):
     print('The 5 nearest neighbors of Given User Id:')
 
     for raw_user_id in results:
-        _to = get_object_or_404(User, user_id=int(raw_user_id))
+        _to = get_object_or_404(Profile, user_id=int(raw_user_id))
         # print(raw_user_id,Candidates2.objects.filter(user_from=user_from,user_to=user_to))
         if Candidates2.objects.filter(user_from=_from):
             if Candidates2.objects.filter(user_from=_from, user_to=_to):
@@ -209,11 +209,11 @@ def recommended_friends(request):
 
 def sign_up(request):
     if request.POST:
-        if User.objects.filter(user_id=int(request.POST.get('user_id'))):
+        if Profile.objects.filter(profile_id=int(request.POST.get('user_id'))):
             print("이미 입력된 데이터입니다.")
             return HttpResponse("이미 존재하는 유저 아이디 입니다. \n 다른 아이디를 입력해주세요 !<li><a href='sign_up_page'>다시 입력 하기</a></li>")
         else:
-            obj = User(user_id=int(request.POST.get('user_id')),
+            obj = Profile(profile_id=int(request.POST.get('user_id')),
                        skin_type=request.POST.get('skin_type'),
                        age=int(request.POST.get('age')),
                        gender=request.POST.get('gender'))

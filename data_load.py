@@ -8,9 +8,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "recoduct.settings")
 import django
 django.setup()
 
-from catalog.models import User
+from catalog.models import Profile
 from catalog.models import Item
 from catalog.models import Rate
+from django.contrib.auth.models import User
 
 
 def load_item():
@@ -35,11 +36,13 @@ if __name__=='__main__':
 #    item_df = load_item()
 #    for idx in range(len(item_df)):
 #        Item(item_id=item_df.iloc[idx, 0], name=item_df.iloc[idx, 1], image=item_df.iloc[idx, 2], brand='이니스프리').save()
-    print("완료")
-#    user_df = load_user()
-#    for idx in range(len(user_df)):
-#        User(user_id=user_df.iloc[idx, 0], age=user_df.iloc[idx, 1], gender=user_df.iloc[idx, 2], skin_type=user_df.iloc[idx, 3], nickname=user_df.iloc[idx, 4], profile=user_df.iloc[idx, 5]).save()
 #    print("완료")
+    user_df = load_user()
+    for idx in range(len(user_df)):
+        user_obj = User(id=user_df.iloc[idx, 0], password=user_df.iloc[idx, 0], username=user_df.iloc[idx, 0])
+        user_obj.save()
+        Profile(user=user_obj, profile_id=user_df.iloc[idx, 0], age=user_df.iloc[idx, 1], gender=user_df.iloc[idx, 2], skin_type=user_df.iloc[idx, 3], nickname=user_df.iloc[idx, 4], image=user_df.iloc[idx, 5]).save()
+    print("완료")
     rate_df = load_rate()
     for idx in range(len(rate_df)):
         Rate(user_id=rate_df.iloc[idx, 0], item_id=rate_df.iloc[idx, 1], rate=rate_df.iloc[idx, 2], review=rate_df.iloc[idx, 3], created_at=rate_df.iloc[idx, 4]).save()
