@@ -24,6 +24,7 @@ urlpatterns = [
 
 urlpatterns += [
     path('catalog/', include('catalog.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 urlpatterns += [

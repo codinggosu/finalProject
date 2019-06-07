@@ -169,19 +169,20 @@ def recommend_friend(given_user_id):
 
     for raw_user_id in results:
         _to = get_object_or_404(User, user_id=int(raw_user_id))
-        print(raw_user_id)
-        print(_from,_to)
         # print(raw_user_id,Candidates2.objects.filter(user_from=user_from,user_to=user_to))
         if Candidates2.objects.filter(user_from=_from):
-            if Candidates2.objects.filter(user_from=_from,user_to=_to):
+            if Candidates2.objects.filter(user_from=_from, user_to=_to):
+                print("user from , to 다 일치")
                 pass
             else:
-                Candidates2.objects.filter(user_from=_from).user_to.add(_to)
+                cand = Candidates2.objects.get(user_from=_from)
+                cand.user_to.add(_to)
+                print("user from만 일치, to 추가")
         else:
             cand=Candidates2.objects.create()
             cand.user_from.add(_from)
             cand.user_to.add(_to)
-    print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
+        print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
     return results
 
 
@@ -193,14 +194,14 @@ def recommended_friends(request):
     user_id = request.POST.get('uid')
     print(user_id)
     recommend_friend(user_id)
-    user_from = get_object_or_404(User,user_id=user_id)
+    user_from = get_object_or_404(User, user_id=user_id)
     users = user_from.user_from.all()
-    print(users[0].user_to.all()[0].gender)
     datas = []
-    for user in users:
-        datas.append(user.user_to.all()[0])
+    for user in users[0].user_to.all():
+        datas.append(user.user_id)
+    friends = [get_object_or_404(User, user_id=user_id) for user_id in datas]
     context = {
-        "users": datas
+        "users": friends
     }
 
     return render(request, "recommended_friends.html", context=context)

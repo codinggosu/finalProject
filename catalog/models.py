@@ -60,7 +60,6 @@ class Rate(models.Model):
         return Item.objects.get(item_id=self.item_id).image
 
 
-
 class User(models.Model):
     """Model representing User."""
     user_id = models.IntegerField(primary_key=True)
@@ -82,8 +81,9 @@ class User(models.Model):
 
 
 class Candidates2(models.Model):
-    user_from = models.ManyToManyField(User,related_name="user_from")
+    user_from = models.ManyToManyField(User, related_name="user_from")
     user_to = models.ManyToManyField(User, related_name="user_to")
+
 
 class Prediction(models.Model):
     """Model repesenting prediction."""

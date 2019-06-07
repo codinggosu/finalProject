@@ -1,0 +1,24 @@
+{% extends 'newindex.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1>sign up!</h1>
+
+    <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+        Username:
+        <br>
+        <input name="username" type="text">
+        <br>
+        Password:
+        <br>
+        <input name="password1" type="password">
+        Confirm Password:
+        <br>
+        <input name="password2" type="password">
+        <br><br>
+        <input type="submit" class="btn btn-primary" value="sign up">
+    </form>
+</div>
+{% endblock %}
