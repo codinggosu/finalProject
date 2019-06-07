@@ -6,15 +6,14 @@
 {% if rate_list %}
 <ul>
     {% for rate in rate_list %}
-    <a href="{{ rate.get_absolute_url }}"> see review in detail </a>
-    <p> {{ rate.user_id }} gave a {{ rate.rate }} for product {{ rate.item_id }} </p>
+
+    <a href="{{ rate.get_absolute_url }}"> {{ rate.review }} </a>
+    <p> {{ rate.get_user }} gave a {{ rate.rate }} for product {{ rate.get_item }} </p>
     {% endfor %}
 </ul>
 {% else %}
 <p>no reviews</p>
 {% endif %}
-{% endblock %}
-{% block pagination %}
 {% if is_paginated %}
 <div class="pagination">
     <span class="page-links">
@@ -30,5 +29,4 @@
     </span>
 </div>
 {% endif %}
-
 {% endblock %}

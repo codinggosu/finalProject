@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect,get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from .models import Item, Rate, User, Prediction, Candidates2
 from django.views import generic
@@ -19,6 +19,8 @@ from django.db import connections
 import pickle
 import os
 from django.core import serializers
+from django.http import HttpResponseRedirect
+from .forms import ReviewForm
 
 def index(request):
     """View function for home page of site."""
@@ -42,6 +44,12 @@ class ItemListView(generic.ListView):
     model = Item
     paginate_by = 10
 
+
+class ItemDetailView(generic.DetailView):
+    model = Item
+
+class UserDetailView(generic.DetailView):
+    model = User
 
 class UserListView(generic.ListView):
     model = User
@@ -221,12 +229,23 @@ def sign_up_page(request):
 
 
 def all_items(request):
-    data = serializers.serialize( "python", Item.objects.all())
-    # context = {key: "name" for key in data}
-    lst = [i['fields']['name'] for i in data]
-    print(type(data))
-    print(lst)
-    context = {"data": lst}
+    # data = serializers.serialize( "python", Item.objects.all())
+    items = Item.objects.all()
+    # print(test)
+    # ids = [item.item_id for item in items]
+    # names = [item.name for item in items]
+    # brands= [item.brand for item in items]
+    # images = [item.image for item in items]
+
+    # names = [i['fields']['name'] for i in data]
+    # brands = [i['fields']['brand'] for i in data]
+    # images = [i['fields']['image'] for i in data]
+    # texts = [i['fields']['texts'] for i in data]
+    # lst = [(i['fields']['name'], i['fields']['brand'], i['fields']['image'],i['fields']['texts'],) for i in data]
+    combined = [(item.item_id, item.name, item.brand, item.image,) for item in items]
+    context = {
+    'items':combined
+    }
     # print(context)
     return render(request, 'catalog/all_products.html', context)
 
@@ -245,3 +264,60 @@ def social(request):
 def friend_review(request):
     rate = Rate.objects.all().count()
     return render(request, 'catalog/friendreview.html')
+
+#
+# def test_form(request, pk):
+#     # if this is a POST request we need to process the form data
+#     context = Item.objects.filter(item_id=pk)
+#     # print("before methods")
+#     if request.methods == 'POST':
+#         print("inside test form")
+#     #     # form = ReviewForm(request.POST)
+#     #     # print("form itself")
+#     #     # print(form)
+#     #     # print("pringing indexed")
+#     #     # print(type(form["your_review"]))
+#     #     # print("method is post")
+#         # print(request.POST['your_review'])
+#         # if form.is_valid():
+#         # return HttpResponseRedirect('thanks')
+#     # else:
+#     #     # form = ReviewForm()
+#     #     print("else!!!")
+#     #     # return HttpResponseRedirect('404')
+#     return render(request, 'name.html', {'item': context[0]})
+
+
+def test_form(request,pk):
+    item_instance= get_object_or_404(Item, item_id=pk)
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ReviewForm(request.POST)
+        current_user = request.user
+        print("current_user id" , current_user.id)
+        # check whether it's valid:
+        if form.is_valid():
+            newrate = Rate()
+            newrate.review = form.cleaned_data['your_review']
+            newrate.rate = form.cleaned_data['your_rate']
+            # newrate.user_id = form.cleaned_data['user']
+            # incremented_id = Rate.objects.count()+1
+            # print(incremented_id, " incremented_id")
+            newrate.item_id = pk
+            if current_user.id == None:
+                user_id = 1234
+                newrate.user_id = user_id
+            else:
+                newrate.user_id = current_user.id
+            newrate.save()
+            return HttpResponse('/thanks/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = ReviewForm()
+
+    return render(request, 'name.html', {'form': form, 'item': item_instance})
+
+def thanks(request):
+    return HttpResponse("THANKS!!!!!!!!")
