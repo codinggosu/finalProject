@@ -6,6 +6,7 @@
 {% if rate_list %}
 <ul>
     {% for rate in rate_list %}
+
     <a href="{{ rate.get_absolute_url }}"> {{ rate.review }} </a>
     <p> {{ rate.get_user }} gave a {{ rate.rate }} for product {{ rate.get_item }} </p>
     {% endfor %}

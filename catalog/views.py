@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
-from catalog.models import Item, Rate, User, Prediction
+from .models import Item, Rate, User, Prediction, Candidates2
 from django.views import generic
 from catalog.forms import RateForm
 from django.http import HttpResponse
@@ -160,19 +160,29 @@ def recommend_friend(given_user_id):
     algo.fit(trainset)
     print(given_user_id)
     given_user_id = int(given_user_id)
+    _from = get_object_or_404(User, user_id=given_user_id)
     inner_id = algo.trainset.to_inner_uid(given_user_id)
 #    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
     neighbors = algo.get_neighbors(inner_id, k=5)
     results = [algo.trainset.to_raw_uid(inner_user_id) for inner_user_id in neighbors]
     print('The 5 nearest neighbors of Given User Id:')
+
     for raw_user_id in results:
-        print(raw_user_id)
-        if User.objects.filter(user_id=given_user_id).candidates.set().filter(user_id=raw_user_id):
-            pass
+        _to = get_object_or_404(User, user_id=int(raw_user_id))
+        # print(raw_user_id,Candidates2.objects.filter(user_from=user_from,user_to=user_to))
+        if Candidates2.objects.filter(user_from=_from):
+            if Candidates2.objects.filter(user_from=_from, user_to=_to):
+                print("user from , to 다 일치")
+                pass
+            else:
+                cand = Candidates2.objects.get(user_from=_from)
+                cand.user_to.add(_to)
+                print("user from만 일치, to 추가")
         else:
-            obj = User.objects.all().filter(user_id=given_user_id).candidates.set()(user_id=raw_user_id)
-            obj.save()
-    print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
+            cand=Candidates2.objects.create()
+            cand.user_from.add(_from)
+            cand.user_to.add(_to)
+        print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
     return results
 
 
@@ -184,13 +194,17 @@ def recommended_friends(request):
     user_id = request.POST.get('uid')
     print(user_id)
     recommend_friend(user_id)
-    users = User.objects.filter(user_id=user_id)
-
+    user_from = get_object_or_404(User, user_id=user_id)
+    users = user_from.user_from.all()
+    datas = []
+    for user in users[0].user_to.all():
+        datas.append(user.user_id)
+    friends = [get_object_or_404(User, user_id=user_id) for user_id in datas]
     context = {
-        "users": users
+        "users": friends
     }
 
-    return render(request, "prediction_result.html", context=context)
+    return render(request, "recommended_friends.html", context=context)
 
 
 def sign_up(request):

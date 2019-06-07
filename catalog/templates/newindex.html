@@ -209,7 +209,13 @@
                         <li class="child-menu"><a href="#">My Page <i class="fa fa-angle-right"></i></a>
                             <div class="sub-menu-wrapper">
                                 <ul class="sub-menu center-content">
-                                    <li><a href="mypage">My Info</a></li>
+                                    {% if user.is_active %}
+                                        <li><a href={% url "my_page" %}>My Info<span class="glyphicon glyphicon-heart"></span> {{user.username}}</a></li>
+                                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                                    {% else %}
+                                    <li><a href="{%url 'login' %}"> <span class="glyphicon glyphicon-user"></span> Login</a></li>
+                                    <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                                    {% endif %}
                                     <li><a href="#">Menu Example 02</a></li>
                                     <li><a href="#">Menu Example 03</a></li>
                                     <li><a href="#">Menu Example 04</a></li>
