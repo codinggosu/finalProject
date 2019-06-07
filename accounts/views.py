@@ -6,14 +6,14 @@ from django.contrib import auth
 
 def signup(request):
     if request.method == "POST":
-        if request.POST["password1"] == request.POST["password2"]:
+        if request.POST["password1"] == request.POST["password2"] and request.POST["gender"] and request.POST["skin_type"] and request.POST["age"] and request.POST["nickname"]:
             user = User.objects.create_user(
                 username=request.POST["username"], password=request.POST["password1"]
             )
             auth.login(request, user)
             return redirect('my_page')
         else:
-            return render(request, 'signup.html', {'error':'username or password is incorrect'})
+            return render(request, 'signup.html', {'error': 'please enter the information correctly'})
     else:
         return render(request, 'signup.html')
 

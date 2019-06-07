@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.db.models import Sum
 from django.shortcuts import render
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -55,26 +56,27 @@ class Rate(models.Model):
         """Returns the url to access a detail record for this Rate."""
         return reverse('rate-detail', args=[str(self.id)])
     def get_user(self):
-        return User.objects.get(user_id=self.user_id)
+        return Profile.objects.get(profile_id=self.user_id)
     def get_item(self):
         return Item.objects.get(item_id=self.item_id)
     def get_item_pic(self):
         return Item.objects.get(item_id=self.item_id).image
 
 
-class User(models.Model):
+class Profile(models.Model):
     """Model representing User."""
-    user_id = models.IntegerField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default='1')
+    profile_id = models.IntegerField(primary_key=True)
     gender = models.CharField(max_length=10, default='F')
     skin_type = models.CharField(max_length=10)
     age = models.FloatField(null=True)
     nickname = models.CharField(max_length=20, default='anonymous')
-    profile = models.TextField(null=True)
+    image = models.TextField(null=True)
     candidates = models.ManyToManyField("self", symmetrical=False, blank=True)
 
 
     def get_written_reviews(self):
-        return Rate.objects.filter(user_id = self.user_id)
+        return Rate.objects.filter(user_id=self.profile_id)
 
 
     def __str__(self):
@@ -83,8 +85,8 @@ class User(models.Model):
 
 
 class Candidates2(models.Model):
-    user_from = models.ManyToManyField(User, related_name="user_from")
-    user_to = models.ManyToManyField(User, related_name="user_to")
+    user_from = models.ManyToManyField(Profile, related_name="user_from")
+    user_to = models.ManyToManyField(Profile, related_name="user_to")
 
 
 class Prediction(models.Model):
