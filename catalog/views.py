@@ -21,7 +21,7 @@ import os
 from django.core import serializers
 from django.http import HttpResponseRedirect
 from .forms import ReviewForm
-
+from django.core.paginator import Paginator
 def index(request):
     """View function for home page of site."""
     item = Item.objects.all().count()
@@ -232,6 +232,9 @@ def sign_up_page(request):
 def all_items(request):
     # data = serializers.serialize( "python", Item.objects.all())
     items = Item.objects.all()
+    paginator = Paginator(items, 11)
+    page = request.GET.get('page')
+    products = paginator.get_page(page)
     # print(test)
     # ids = [item.item_id for item in items]
     # names = [item.name for item in items]
@@ -245,7 +248,8 @@ def all_items(request):
     # lst = [(i['fields']['name'], i['fields']['brand'], i['fields']['image'],i['fields']['texts'],) for i in data]
     combined = [(item.item_id, item.name, item.brand, item.image,) for item in items]
     context = {
-    'items':combined
+    'items':combined,
+    'products': products,
     }
     # print(context)
     return render(request, 'catalog/all_products.html', context)

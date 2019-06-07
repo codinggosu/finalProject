@@ -2,18 +2,24 @@
 
 
 {% block content %}
-<h1>Review List</h1>
+<div align="center">
+<h1>Lastest Reviews</h1>
+
 {% if rate_list %}
 <ul>
     {% for rate in rate_list %}
-
+    <div style="border: thin solid black; >
     <a href="{{ rate.get_absolute_url }}"> {{ rate.review }} </a>
     <p> {{ rate.get_user }} gave a {{ rate.rate }} for product {{ rate.get_item }} </p>
+    <p> reviewed at: {{ rate.created_at }} </p>
+    </div>
+    <br>
     {% endfor %}
 </ul>
 {% else %}
 <p>no reviews</p>
 {% endif %}
+</div>
 {% if is_paginated %}
 <div class="pagination">
     <span class="page-links">

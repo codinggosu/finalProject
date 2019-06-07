@@ -24,6 +24,8 @@ class Item(models.Model):
     def get_reviews(self):
         return Rate.objects.filter(item_id=self.item_id)
 
+    def get_numberof_reviews(self):
+        return Rate.objects.filter(item_id=self.item_id).count()
 
     def enter_review(self):
         return "have to implement"
@@ -36,7 +38,7 @@ class Item(models.Model):
 
 
 class Rate(models.Model):
-    content = models.TextField(default="just testing content for rate model, confliction with views.save_rate")
+    content = models.TextField(default="just testing content for rate model, confliction with views.save_rate", null=True)
     review = models.TextField(blank=False, null=True)
     rate = models.IntegerField(blank=False, null=False)
     item_id = models.IntegerField(blank=False, null=False)
