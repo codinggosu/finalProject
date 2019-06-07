@@ -15,6 +15,9 @@ urlpatterns = [
     path('sign_up_page', views.sign_up_page, name='sign_up_page'),
     path('test', views.test, name='test'),
     path('mypage', views.my_page, name='my_page'),
+    path('social', views.social, name='social'),
+    path('friend_review', views.friend_review, name='friend_review'),
+    path('rate-detail/<int:pk>', views.RateDetailView.as_view(), name='rate-detail'),
+    path('allitems', views.all_items, name='allitems'),
     path('friend', views.friend, name='friend'),
-    path('recommended_friends', views.recommended_friends, name='recommended_friends')
-]
+    path('recommended_friends', views.recommended_friends, name='recommended_friends')]

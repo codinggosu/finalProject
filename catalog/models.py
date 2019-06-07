@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -15,6 +16,7 @@ class Item(models.Model):
 
 
 class Rate(models.Model):
+    content = models.TextField(default="just testing content for rate model, confliction with views.save_rate")
     review = models.TextField(blank=False, null=True)
     rate = models.IntegerField(blank=False, null=False)
     item_id = models.IntegerField(blank=False, null=False)
@@ -23,7 +25,20 @@ class Rate(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.item_id.name}:{self.user_id.user_id}'
+        return self.review[:20] + " ... "
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this Article."""
+        return reverse('rate-detail', args=[str(self.id)])
+
+    def get_user(self):
+        return User.objects.get(user_id=self.user_id)
+
+    def get_item(self):
+        return Item.objects.get(item_id=self.item_id)
+
+    def get_item_pic(self):
+        return Item.objects.get(item_id=self.item_id).image
 
 
 class User(models.Model):
@@ -41,13 +56,9 @@ class User(models.Model):
         return self.nickname
 
 
-# class Brand(models.Model):
-#     """Model representing name."""
-#     name = models.CharField(max_length=100)
-#
-#     def __str__(self):
-#         return self.name
-
+class Candidates2(models.Model):
+    user_from = models.ManyToManyField(User,related_name="user_from")
+    user_to = models.ManyToManyField(User, related_name="user_to")
 
 class Prediction(models.Model):
     """Model repesenting prediction."""
@@ -74,5 +85,3 @@ class Prediction(models.Model):
 #my page
 #ㄴ recommendation
 #ㄴ my reviews
-
-

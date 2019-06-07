@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 # Create your views here.
-from catalog.models import Item, Rate, User, Prediction
+from .models import Item, Rate, User, Prediction, Candidates2
 from django.views import generic
 from catalog.forms import RateForm
 from django.http import HttpResponse
@@ -18,6 +18,7 @@ from collections import defaultdict
 from django.db import connections
 import pickle
 import os
+from django.core import serializers
 
 def index(request):
     """View function for home page of site."""
@@ -49,7 +50,10 @@ class UserListView(generic.ListView):
 
 class RateListView(generic.ListView):
     model = Rate
-    paginate_by = 20
+    paginate_by = 10
+
+class RateDetailView(generic.DetailView):
+    model = Rate
 
 
 class PredictionListView(generic.ListView):
@@ -148,18 +152,27 @@ def recommend_friend(given_user_id):
     algo.fit(trainset)
     print(given_user_id)
     given_user_id = int(given_user_id)
+    _from = get_object_or_404(User, user_id=given_user_id)
     inner_id = algo.trainset.to_inner_uid(given_user_id)
 #    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
     neighbors = algo.get_neighbors(inner_id, k=5)
     results = [algo.trainset.to_raw_uid(inner_user_id) for inner_user_id in neighbors]
     print('The 5 nearest neighbors of Given User Id:')
+
     for raw_user_id in results:
+        _to = get_object_or_404(User, user_id=int(raw_user_id))
         print(raw_user_id)
-        if User.objects.filter(user_id=given_user_id).candidates.set().filter(user_id=raw_user_id):
-            pass
+        print(_from,_to)
+        # print(raw_user_id,Candidates2.objects.filter(user_from=user_from,user_to=user_to))
+        if Candidates2.objects.filter(user_from=_from):
+            if Candidates2.objects.filter(user_from=_from,user_to=_to):
+                pass
+            else:
+                Candidates2.objects.filter(user_from=_from).user_to.add(_to)
         else:
-            obj = User.objects.all().filter(user_id=given_user_id).candidates.set()(user_id=raw_user_id)
-            obj.save()
+            cand=Candidates2.objects.create()
+            cand.user_from.add(_from)
+            cand.user_to.add(_to)
     print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
     return results
 
@@ -172,13 +185,17 @@ def recommended_friends(request):
     user_id = request.POST.get('uid')
     print(user_id)
     recommend_friend(user_id)
-    users = User.objects.filter(user_id=user_id)
-
+    user_from = get_object_or_404(User,user_id=user_id)
+    users = user_from.user_from.all()
+    print(users[0].user_to.all()[0].gender)
+    datas = []
+    for user in users:
+        datas.append(user.user_to.all()[0])
     context = {
-        "users": users
+        "users": datas
     }
 
-    return render(request, "prediction_result.html", context=context)
+    return render(request, "recommended_friends.html", context=context)
 
 
 def sign_up(request):
@@ -201,25 +218,30 @@ def sign_up_page(request):
     return render(request, "catalog/sign_up.html")
 
 
-def save_rate(request):
-    if request.POST:
-        print("okay")
-        print(request.POST)
-        if Rate.objects.filter(user_id=int(request.POST.get('content[user_id]')), item_id=int(request.POST.get('content[item_id]'))):
-            pass
-        else:
-            obj = Rate(user_id=int(request.POST.get('content[user_id]')),
-                       item_id=int(request.POST.get('content[item_id]')),
-                       rate=int(request.POST.get('content[rate]')))
-            obj.save()
-        print(request.POST.get('content[item_id]'))
-        return render(request, "catalog/item_list.html")
-    return HttpResponse(status=405)
+
+
+def all_items(request):
+    data = serializers.serialize( "python", Item.objects.all())
+    # context = {key: "name" for key in data}
+    lst = [i['fields']['name'] for i in data]
+    print(type(data))
+    print(lst)
+    context = {"data": lst}
+    # print(context)
+    return render(request, 'catalog/all_products.html', context)
 
 
 def test(request):
-  return render(request, 'newindex.html')
+    return render(request, 'newindex.html')
 
 
 def my_page(request):
   return render(request, 'catalog/mypage.html')
+
+
+def social(request):
+    return render(request, 'catalog/social.html')
+
+def friend_review(request):
+    rate = Rate.objects.all().count()
+    return render(request, 'catalog/friendreview.html')
