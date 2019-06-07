@@ -8,10 +8,22 @@
 {% if rate_list %}
 <ul>
     {% for rate in rate_list %}
-    <div style="border: thin solid black; >
+
+
+    <div style="border: thin solid black;" >
+        <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVBqHgTyJvjMHQdujR7NeI22uf-Bj_qPy2AHierD1OUkgZOdJSnw"> -->
+        <!-- {{ rate.get_user.image }} -->
+    <div>
     <a href="{{ rate.get_absolute_url }}"> {{ rate.review }} </a>
-    <p> {{ rate.get_user }} gave a {{ rate.rate }} for product {{ rate.get_item }} </p>
+    <br>
+    <a href="{{ rate.get_user.get_absolute_url }} "> {{ rate.get_user}}</a>
+     gave a {{ rate.rate }} for product <a href="{{ rate.get_item.get_absolute_url }} "> {{ rate.get_item }} </a>
     <p> reviewed at: {{ rate.created_at }} </p>
+    </div>
+    <div align="left" display= "inline-block" >
+    <img src ="{{ rate.get_user.image }}" style='height: 10%; width: 10%; object-fit: contain; position: relative; right: 0;'>
+    <img src = "{{rate.get_item.image }}" style='height: 10%; width: 10%; object-fit: contain; position: relative; right: 0;'>
+    </div>
     </div>
     <br>
     {% endfor %}

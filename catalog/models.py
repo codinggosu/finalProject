@@ -15,7 +15,7 @@ class Item(models.Model):
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this Item."""
-        return reverse('rate-detail', args=[str(self.id)])
+        return reverse('item-detail', args=[str(self.item_id)])
 
     def get_avgscore(self):
         total = Rate.objects.filter(item_id=self.item_id).aggregate(Sum('rate'))
@@ -55,6 +55,11 @@ class Rate(models.Model):
 
         """Returns the url to access a detail record for this Rate."""
         return reverse('rate-detail', args=[str(self.id)])
+
+    def get_url(self):
+        return 'item-detail/'+ str(self.item_id)
+
+        
     def get_user(self):
         return Profile.objects.get(profile_id=self.user_id)
     def get_item(self):
@@ -74,6 +79,8 @@ class Profile(models.Model):
     image = models.TextField(null=True)
     candidates = models.ManyToManyField("self", symmetrical=False, blank=True)
 
+    def get_absolute_url(self):
+        return reverse('profile-detail', args=[str(self.profile_id)])
 
     def get_written_reviews(self):
         return Rate.objects.filter(user_id=self.profile_id)

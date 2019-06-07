@@ -407,7 +407,7 @@
                         <div class="portfolio row with-desc">
                             <div class="post-media pitem item-w1 item-h1 cat1">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_01.png" %}" alt="" class="img-responsive">
+                                    <img src="{{ items.0.image}}" display="block" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -415,14 +415,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Plumeria Logo Design</a></h4>
-                                    <p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed sed. </p>
+                                    <h4><a href="#">{{ items.0 }}</a></h4>
+                                    <p>Interdum  malesuada fames ac ante ipsum primis in faucibus. Sed sed. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat2">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_02.png" %}" alt="" class="img-responsive">
+                                    <img src="{{ items.1.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -430,14 +430,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Back to Life</a></h4>
+                                    <h4><a href="#">{{ items.1 }}</a></h4>
                                     <p>Aliquam erat volutpat. Donec pharetra imperdiet metus, eget cras.</p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat3">
                                 <div class="entry">
-                                    <img src= "{% static "images/upload/desc_work_03.png" %}" alt="" class="img-responsive">
+                                    <img src= "{{ items.2.image }}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -445,14 +445,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Creative Share App</a></h4>
+                                    <h4><a href="#">{{ items.2 }}</a></h4>
                                     <p>Aenean consectetur semper lorem, sit amet volutpat. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat4">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_04.png" %}" alt="" class="img-responsive">
+                                    <img src="{{ items.3.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -460,14 +460,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Luana 3D Max</a></h4>
+                                    <h4><a href="#">{{ items.3 }}</a></h4>
                                     <p>Nunc vitae metus sagittis, pharetra risus non, luctus ligula volutpat. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat1">
                                 <div class="entry">
-                                    <img src= "{% static "images/upload/desc_work_05.png" %}" alt="" class="img-responsive">
+                                    <img src= "{{ items.4.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -475,14 +475,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Custom M Logo</a></h4>
+                                    <h4><a href="#">{{ items.4 }}</a></h4>
                                     <p>Proin non mollis orci, quis maximus nisi. In imperdiet neque eu metus. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat2">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_06.png" %}" alt="" class="img-responsive">
+                                    <img src="{{ items.5.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -490,14 +490,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Internal App Project</a></h4>
+                                    <h4><a href="#">{{ items.5 }}</a></h4>
                                     <p>Etiam fermentum, urna sed varius aliquet, sem enim ultrices arcu amet. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat3">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_07.png" %}" alt="" class="img-responsive">
+                                    <img src="{{ items.6.image}}"alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -505,14 +505,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Audio Player App</a></h4>
+                                    <h4><a href="#">{{ items.6 }}</a></h4>
                                     <p>Ut convallis mollis est, eu tincidunt magna varius dignissim. Sed sed.</p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat4">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_08.png" %}" alt="" class="img-responsive">
+                                    <img src="{{ items.7.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -520,7 +520,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Geek Vector Design</a></h4>
+                                    <h4><a href="#">{{ items.7 }}</a></h4>
                                     <p>Ut porttitor aliquet auctor. Donec pellentesque libero et mattis amet. </p>
                                 </div>
                             </div><!-- end post-media -->
@@ -590,35 +590,36 @@
             </div><!-- end container -->
         </section><!-- end section -->
 
-        <div class="section bgcolor noover">
+        <!-- <div class="section bgcolor noover">
             <div class="container-fluid">
                 <div class="client-box">
                     <img src= "{% static "images/upload/client_01.png" %}" alt="" class="img-responsive">
-                </div><!-- end col -->
+                </div>
 
                 <div class="client-box">
                     <img src="{% static "images/upload/client_02.png" %}" alt="" class="img-responsive">
-                </div><!-- end col -->
+                </div>
 
                 <div class="client-box">
                     <img src="{% static "images/upload/client_03.png" %}" alt="" class="img-responsive">
-                </div><!-- end col -->
+                </div>
 
                 <div class="client-box">
                     <img src="{% static "images/upload/client_04.png" %}" alt="" class="img-responsive">
-                </div><!-- end col -->
+                </div>
 
                 <div class="client-box">
                     <img src="{% static "images/upload/client_05.png" %}" alt="" class="img-responsive">
-                </div><!-- end col -->
-            </div><!-- end container -->
-        </div><!-- end section -->
+                </div>
+            </div>
+        </div> -->
 
         <section class="section">
             <div class="container">
                 <div class="section-title text-center">
-                    <h3>Case Studies</h3>
-                    <p>Maecenas sit amet tristique turpis. Quisque porttitor eros quis leo pulvinar, at hendrerit sapien iaculis. Donec consectetur accumsan arcu, sit amet fringilla ex ultricies.</p>
+                    <h3>Our Team</h3>
+                    <p>Our Team consists of an avant garde mix of data scientists, beauty product specialists and thinkers.</p>
+                    <p> you are in good hands</p>
                 </div><!-- end title -->
 
                 <div id="owl-01" class="owl-carousel owl-theme owl-theme-01">
@@ -760,7 +761,7 @@
                             </div><!-- end media -->
 
                             <div class="blog-desc">
-                                <h4><a href="#">The most suitable web design</a></h4>
+                                <h4><a href="#">{{ reviews }}</a></h4>
                                 <p>Praesent at suscipit ligula. Suspendisse pre neque, quis suscipit enim. sed maximus, mia auctor.</p>
                             </div><!-- end blog-desc -->
 
