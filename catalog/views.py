@@ -22,6 +22,10 @@ from django.core import serializers
 from django.http import HttpResponseRedirect
 from .forms import ReviewForm
 from django.core.paginator import Paginator
+from django.contrib.auth.models import User
+
+
+
 def index(request):
     """View function for home page of site."""
     item = Item.objects.all().count()
@@ -48,10 +52,10 @@ class ItemListView(generic.ListView):
 class ItemDetailView(generic.DetailView):
     model = Item
 
-class UserDetailView(generic.DetailView):
+class ProfileDetailView(generic.DetailView):
     model = Profile
 
-class UserListView(generic.ListView):
+class ProfileListView(generic.ListView):
     model = Profile
     paginate_by = 10
 
@@ -230,22 +234,11 @@ def sign_up_page(request):
 
 
 def all_items(request):
-    # data = serializers.serialize( "python", Item.objects.all())
     items = Item.objects.all()
     paginator = Paginator(items, 11)
     page = request.GET.get('page')
     products = paginator.get_page(page)
-    # print(test)
-    # ids = [item.item_id for item in items]
-    # names = [item.name for item in items]
-    # brands= [item.brand for item in items]
-    # images = [item.image for item in items]
 
-    # names = [i['fields']['name'] for i in data]
-    # brands = [i['fields']['brand'] for i in data]
-    # images = [i['fields']['image'] for i in data]
-    # texts = [i['fields']['texts'] for i in data]
-    # lst = [(i['fields']['name'], i['fields']['brand'], i['fields']['image'],i['fields']['texts'],) for i in data]
     combined = [(item.item_id, item.name, item.brand, item.image,) for item in items]
     context = {
     'items':combined,
@@ -254,9 +247,21 @@ def all_items(request):
     # print(context)
     return render(request, 'catalog/all_products.html', context)
 
-
+# homepage
 def test(request):
-    return render(request, 'newindex.html')
+    items = Item.objects.all()
+    reviews = Rate.objects.all()[30]
+    sample = []
+    # get 30 good raing items
+    for i in items:
+        if i.get_avgscore() > 4.3:
+            sample.append(i)
+        if len(sample) > 30:
+            break
+    print(reviews)
+
+
+    return render(request, 'newindex.html', {'items': items, 'reviews': reviews})
 
 
 def my_page(request):
@@ -270,59 +275,63 @@ def friend_review(request):
     rate = Rate.objects.all().count()
     return render(request, 'catalog/friendreview.html')
 
-#
-# def test_form(request, pk):
-#     # if this is a POST request we need to process the form data
-#     context = Item.objects.filter(item_id=pk)
-#     # print("before methods")
-#     if request.methods == 'POST':
-#         print("inside test form")
-#     #     # form = ReviewForm(request.POST)
-#     #     # print("form itself")
-#     #     # print(form)
-#     #     # print("pringing indexed")
-#     #     # print(type(form["your_review"]))
-#     #     # print("method is post")
-#         # print(request.POST['your_review'])
-#         # if form.is_valid():
-#         # return HttpResponseRedirect('thanks')
-#     # else:
-#     #     # form = ReviewForm()
-#     #     print("else!!!")
-#     #     # return HttpResponseRedirect('404')
-#     return render(request, 'name.html', {'item': context[0]})
+def sample(request,pk):
+    user = User.objects.filter(username='testing')[0]
+    print(user)
+    print(user.profile)
+    print(user.id)
+    print(user.profile.profile_id)
+    return HttpResponse(user.profile)
 
+def profile_detail(request, profile_id):
+    profile = Profile.objects.filter(profile_id = profile_id)[0]
+    return render(request, 'catalog/profile_detail.html', {'profile': profile})
 
 def test_form(request,pk):
     item_instance= get_object_or_404(Item, item_id=pk)
     # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = ReviewForm(request.POST)
-        current_user = request.user
-        print("current_user id" , current_user.id)
-        # check whether it's valid:
-        if form.is_valid():
-            newrate = Rate()
-            newrate.review = form.cleaned_data['your_review']
-            newrate.rate = form.cleaned_data['your_rate']
-            # newrate.user_id = form.cleaned_data['user']
-            # incremented_id = Rate.objects.count()+1
-            # print(incremented_id, " incremented_id")
-            newrate.item_id = pk
-            if current_user.id == None:
-                user_id = 1234
-                newrate.user_id = user_id
-            else:
-                newrate.user_id = current_user.id
-            newrate.save()
-            return HttpResponse('/thanks/')
+    items = Item.objects.all()
+    paginator = Paginator(items, 11)
+    page = request.GET.get('page')
+    products = paginator.get_page(page)
 
-    # if a GET (or any other method) we'll create a blank form
+    # combined = [(item.item_id, item.name, item.brand, item.image,) for item in items]
+    # context = {
+    # 'items':combined,
+    # 'products': products,
+    # }
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = ReviewForm(request.POST)
+            current_user = request.user
+            print("current_user id" , current_user.id)
+            # check whether it's valid:
+            if form.is_valid():
+                newrate = Rate()
+                newrate.review = form.cleaned_data['your_review']
+                newrate.rate = form.cleaned_data['your_rate']
+                # newrate.user_id = form.cleaned_data['user']
+                # incremented_id = Rate.objects.count()+1
+                # print(incremented_id, " incremented_id")
+                newrate.item_id = pk
+                if current_user.id == None:
+                    user_id = 1234
+                    newrate.user_id = user_id
+                else:
+                    newrate.user_id = current_user.id
+                print(newrate.user_id, "user id input of new review")
+                newrate.save()
+                return render(request, 'catalog/thanks.html')
+
+        # if a GET (or any other method) we'll create a blank form
+        else:
+            form = ReviewForm()
+
+        return render(request, 'catalog/item_detail.html', {'form': form, 'item': item_instance, 'products': products,})
     else:
-        form = ReviewForm()
-
-    return render(request, 'name.html', {'form': form, 'item': item_instance})
-
-def thanks(request):
-    return HttpResponse("THANKS!!!!!!!!")
+        items = Item.objects.all()
+        paginator = Paginator(items, 11)
+        page = request.GET.get('page')
+        products = paginator.get_page(page)
+        return render(request, 'catalog/item-detail-out.html', {'item': item_instance})

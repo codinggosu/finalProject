@@ -1,13 +1,18 @@
 {% extends "newindex.html" %}
 
 {% block content %}
+<div align="center">
+
 <p> Review #: {{rate.pk}}</p>
+<h3> {{ rate.get_item }} </h3>
+<br>
 <h5> {{rate.review}}</h5>
 <img src="{{ rate.get_item_pic }}">
-<p>Review of product: {{ rate.get_item }}</p>
-<p> review by: {{ rate.get_user }} (user id: {{ rate.get_user.user_id }})</p>
+<br>
+review by:<a href= "{{ rate.get_user }} "> {{rate.get_user }}</a>
+<p>user id: {{ rate.get_user.user_id }} </p>
 <p> Gave Score of : {{ rate.rate}} </p>
-
+</div>
 <!-- <p>by {{article.author}} 님</p>
 <p>{{article.create_date.year}}년 {{article.create_date.month}} 월
      {{article.create_date.day}}일</p> -->

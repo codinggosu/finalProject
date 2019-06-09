@@ -11,16 +11,6 @@
 <br>
 <br>
 <br>
-<form action="" method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="fieldWrapper">
-        {{ field.errors }}
-        {{ field.label_tag }}: {{ field }}
-    </div>
-{% endfor %}
-    <input type="submit" value="Submit">
-</form>
 <!-- <form action="" method="post">
     {% csrf_token %}
     {{ form }}
