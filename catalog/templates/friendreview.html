@@ -1,16 +1,33 @@
 {% extends "newindex.html" %}
 
+
 {% block content %}
-  <div class="page_title">당신을 위한 추천 친구 목록</div>
-    <div class="page_body">
-    <ul>
-    {% if users %}
-        {% for user in users %}
-        <li><strong>친구 명: {{ user.nickname}}</strong><img src="{{ user.profile }}" width="50px" height="50px" alt="유저 프사"></li>
-        {% endfor %}
-    {% else %}
-        추천 친구 목록이 없습니다.
-    {% endif %}
-    </ul>
+<div align="center">
+<h1>Recommended Friends </h1>
+
+{% if users %}
+<ul>
+    {% for user in users %}
+
+
+    <div style="border: thin solid black;" >
+        <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVBqHgTyJvjMHQdujR7NeI22uf-Bj_qPy2AHierD1OUkgZOdJSnw"> -->
+        <!-- {{ rate.get_user.image }} -->
+    <div> 닉네임 : {{ user.nickname }}
+        <br>
+        성별 : {{ user.gender }}
+    <p> 피부 타입 : {{ user.skin_type}}</p>
+        <p> 최근 리뷰 : {{ user.get_written_reviews.review }}</p>
     </div>
+    <div align="left" display= "inline-block" >
+    <img src ="{{ user.image }}" style='height: 10%; width: 10%; object-fit: contain; position: relative; right: 0;'>
+    </div>
+    </div>
+    <br>
+    {% endfor %}
+</ul>
+{% else %}
+<p>no followings</p>
+{% endif %}
+</div>
 {% endblock %}

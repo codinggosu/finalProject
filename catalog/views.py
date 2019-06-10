@@ -197,7 +197,7 @@ def recommend_friends(request):
 
 
 @login_required
-def friend_review(request):
+def recommended_friends(request):
     profile_id = int(request.user.id)
     print(profile_id)
     user_from = get_object_or_404(Profile, profile_id=profile_id)
@@ -211,7 +211,7 @@ def friend_review(request):
     context = {
         "users": friends
     }
-    return render(request, "friendreview.html", context=context)
+    return render(request, "recommended_friends.html", context=context)
 
 
 def sign_up(request):
@@ -251,6 +251,21 @@ def all_items(request):
     return render(request, 'catalog/all_products.html', context)
 
 
+def friend_review(request):
+    profile_id = int(request.user.id)
+    user_from = get_object_or_404(Profile, profile_id=profile_id)
+    users = user_from.user_from.all()
+    print(users)
+    datas = []
+    for user in users[0].user_to.all():
+        datas.append(user.user_id)
+    friends = [get_object_or_404(Profile, profile_id=profile_id) for profile_id in datas]
+    context = {
+        "users": friends
+    }
+    return render(request, "friendreview.html", context=context)
+
+
 
 def recotest(request):
 
@@ -287,14 +302,6 @@ def recotest(request):
         return render(request, "catalog/recommended_products.html", context)
 
 
-        # recommended_products = [i[0] for i in recommend(curr_profile.profile_id)]
-        # print(recommend_products, "answer")
-        # for i in recommended_products:
-        #     print(Item.objects.filter(item_id=i))
-
-
-
-
 
 
 
@@ -325,10 +332,11 @@ def test(request):
 def my_page(request):
     curr_user = request.user
     if not curr_user.is_authenticated:
-        messages.info(request, 'Your password has been changed successfully!')
+        messages.info(request, 'Your need to log in!')
         return render(request, '/accounts/login.html')
     else:
-        context = Profile.objects.filter(profile_id = curr_user.profile.profile_id)[0]
+        context = Profile.objects.get(profile_id = curr_user.profile.profile_id)
+        print(context)
         return render(request, 'catalog/mypage.html', {'context': context})
 
 
