@@ -9,7 +9,7 @@
 
 <!-- <div  class="col-sm-10" > -->
 <div align="center">
-    <h2 style="font-style:italic;" >Explore our <mark>vast</mark> selection of products!!</h2>
+    <h2 style="font-style:italic;" > Just Something our machine learning magic cooked up, hope you like it!!</h2>
     <br>
     <br>
 
@@ -19,13 +19,14 @@
     {% for product in products %}
     <!-- <img src="{{ product.image }}" > -->
     <div style="float:left;">
-    <a href="item-detail/{{ product.item_id }}">
-    <img border="0" src="{{ product.image }}"">
+    <a href="item-detail/{{ product.0.item_id }}">
+    <img border="0" src="{{ product.0.image }}"">
     </a>
-    <p>{{ product.na|truncatechars:15 }} </p>
-    <p> Brand: {{ product.brand }} </p>
-    <p> Score: {{ product.get_avgscore }} </p>
-    <p> Reviewed {{ product.get_numberof_reviews }} times </p>
+    <p> {{ product.0.name|truncatechars:15 }}</p>
+    <p> Brand: {{ product.0.brand }} </p>
+    <p> Score: {{ product.0.get_avgscore }} </p>
+    <p> Reviewed {{ product.0.get_numberof_reviews }} times </p>
+    <p> Expected Rating: {{ product.1 }}
     </div>
     {% endfor %}
 </div>

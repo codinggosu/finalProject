@@ -9,7 +9,7 @@
 <h5> {{rate.review}}</h5>
 <img src="{{ rate.get_item_pic }}">
 <br>
-review by:<a href= "{{ rate.get_user }} "> {{rate.get_user }}</a>
+review by:<a href= "{{ rate.get_user.get_absolute_url }} "> {{rate.get_user }}</a>
 <p>user id: {{ rate.get_user.user_id }} </p>
 <p> Gave Score of : {{ rate.rate}} </p>
 </div>

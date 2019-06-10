@@ -1,8 +1,32 @@
 {% extends "newindex.html" %}
 
-
 {% block content %}
-My Page Test
+<div align="center">
+    <h2> {{context.nickname}}</h2>
+    <br>
+    <img src = "{{ profile.image }}" height="300" width="300">
+    <br>
+    <br>
+    <p> 성별: {{ context.gender }} </p>
+    <p> 나이: {{ context.age |floatformat }} </p>
+    <p> 피부 타입: {{ context.skin_type }} </p>
+    <br>
+    <br>
+    <br>
+
+    <h3>Reviews Written by this user</h3>
+{% for review in context.get_written_reviews %}
+
+<div style="border: black;" >
+    <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVBqHgTyJvjMHQdujR7NeI22uf-Bj_qPy2AHierD1OUkgZOdJSnw"> -->
+    <!-- {{ rate.get_user.image }} -->
+<div>
+<br>
+<a href=" {{review.get_absolute_url }}"><p>{{ review.review }}</p></a>
+<p> written on: {{review.created_at }},     gave {{ review.rate }} stars <p>
+
+{% endfor %}
+<!-- <p>by {{article.author}} 님</p>
+<p>{{article.create_date.year}}년 {{article.create_date.month}} 월
+     {{article.create_date.day}}일</p> -->
 {% endblock %}
-
-

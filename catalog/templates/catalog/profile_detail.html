@@ -7,8 +7,14 @@
     <img src = "{{ profile.image }}" height="300" width="300">
     <br>
     <br>
+    <p> 성별: {{ profile.gender }} </p>
+    <p> 나이: {{ profile.age |floatformat }} </p>
+    <p> 피부 타입: {{ profile.skin_type }} </p>
+    <br>
+    <br>
+    <br>
 
-    <h4>Reviews Written by this user</h4>
+    <h3>Reviews Written by this user</h3>
 {% for review in profile.get_written_reviews %}
 
 <div style="border: black;" >

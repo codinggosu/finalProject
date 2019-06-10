@@ -25,4 +25,5 @@ urlpatterns = [
     path('profile-detail/<int:profile_id>', views.profile_detail, name='profile-detail'),
     path('sample/<int:pk>', views.sample, name='sample'),
     path('recommend_friends', views.recommend_friends, name='recommend_friends'),
+    path('recotest', views.recotest, name='recotest'),
 ]
