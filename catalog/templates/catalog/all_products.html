@@ -30,7 +30,7 @@
     <a href="item-detail/{{ product.item_id }}">
     <img border="0" src="{{ product.image }}"">
     </a>
-    <p>{{ product.na|truncatechars:15 }} </p>
+    <p>{{ product.name |truncatechars:15 }} </p>
     <p> Brand: {{ product.brand }} </p>
     <p> Score: {{ product.get_avgscore }} </p>
     <p> Reviewed {{ product.get_numberof_reviews }} times </p>

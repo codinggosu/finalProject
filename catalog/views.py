@@ -109,8 +109,8 @@ def get_top_n(predictions, n, given_user_id):
 
 
 def recommend(given_user_id):
-    given_user_id = int(get_object_or_404(User, username=given_user_id).id)
-    print(given_user_id)
+    # given_user_id = int(get_object_or_404(User, username=given_user_id).id)
+    print(given_user_id, "recommend function printing given_user_id")
     queryset = Rate.objects.all()
     query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
     df = pd.read_sql_query(query, con=connections['default'], params=params)
@@ -134,7 +134,8 @@ def recommend(given_user_id):
             obj = Prediction(user_id=given_user_id, item_id=item_prediction[0], prediction=round(item_prediction[1], 1))
             obj.save()
     print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
-    return [item_prediction[0] for item_prediction in top_10_items[given_user_id]]
+    # return [item_prediction[0] for item_prediction in top_10_items[given_user_id]]
+    return top_10_items[given_user_id]
 
 
 def prediction(request):
@@ -291,10 +292,17 @@ def recotest(request):
         print("Not logged in")
         return redirect("/accounts/login/")
     else:
+        print("else ")
         curr_user = request.user
+        print(curr_user)
+        print(curr_user.profile)
         if not Prediction.objects.filter(user_id=curr_user.profile.profile_id).exists():
+            print("else if")
+            print(curr_user.profile.profile_id)
             recommendations = recommend(curr_user.profile.profile_id)
-            products = [(Item.objects(filter(item_id=i[0])),i[1]) for i in recommendations]
+            print("recommendations done")
+            print(recommendations)
+            products = [(Item.objects.get(item_id=i[0]),i[1]) for i in recommendations]
             # recommendations = Prediction.objects.filter(user_id=curr_user.profile.profile_id)
             # products = [(Item.objects(filter(item_id=i[0])),i[1]) for i in recommendations]
             print(products, "first if")
@@ -302,21 +310,13 @@ def recotest(request):
                 messages.error(request, "You have to Rate something First to get recommendations!!")
                 return all_items(request)
         else:
+            print("else se")
             products = [(Item.objects.filter(item_id=i.item_id)[0],i.prediction) for i in Prediction.objects.filter(user_id=curr_user.profile.profile_id)]
             print(products, "products else")
         # lst = [ i.item_id for i in product_recommendations]
         # print(lst)
-
-    context = {"products": products}
-    return render(request, "catalog/recommended_products.html", context)
-
-
-        # recommended_products = [i[0] for i in recommend(curr_profile.profile_id)]
-        # print(recommend_products, "answer")
-        # for i in recommended_products:
-        #     print(Item.objects.filter(item_id=i))
-
-
+        context = {"products": products}
+        return render(request, "catalog/recommended_products.html", context)
 
 
 
@@ -349,10 +349,11 @@ def test(request):
 def my_page(request):
     curr_user = request.user
     if not curr_user.is_authenticated:
-        messages.info(request, 'Your password has been changed successfully!')
+        messages.info(request, 'Your need to log in!')
         return render(request, '/accounts/login.html')
     else:
-        context = Profile.objects.filter(profile_id = curr_user.profile.profile_id)[0]
+        context = Profile.objects.get(profile_id = curr_user.profile.profile_id)
+        print(context)
         return render(request, 'catalog/mypage.html', {'context': context})
 
 
