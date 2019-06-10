@@ -3,7 +3,7 @@ from catalog import views
 
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.test, name='index'),
     path('items', views.ItemListView.as_view(), name='items'),
     path('users', views.ProfileListView.as_view(), name='users'),
     path('rates', views.RateListView.as_view(), name='rates'),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('profile-detail/<int:profile_id>', views.profile_detail, name='profile-detail'),
     path('sample/<int:pk>', views.sample, name='sample'),
     path('recotest', views.recotest, name='recotest'),
+    
 ]

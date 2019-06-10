@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 # Create your views here.
 from .models import Item, Rate, Profile, Prediction, Candidates2
 from django.views import generic
@@ -33,7 +33,6 @@ def index(request):
     rate = Rate.objects.all().count()
     num_visits = request.session.get('num_visits', 1)
     request.session['num_visits'] = num_visits + 1
-
     context = {
         'item': item,
         'user': user,
@@ -250,6 +249,7 @@ def all_items(request):
 
 
 def recotest(request):
+
     # print(recommend(profile_id))
     lst = []
     if not request.user.is_authenticated:
@@ -264,8 +264,8 @@ def recotest(request):
             # products = [(Item.objects(filter(item_id=i[0])),i[1]) for i in recommendations]
             print(products, "first if")
             if len(products)==0:
-                print("user has not entered any reviews, therefore unable to return recommendations")
-                # maybe give top 20 best selling products
+                messages.error(request, "You have to Rate something First to get recommendations!!")
+                return all_items(request)
         else:
             products = [(Item.objects.filter(item_id=i.item_id)[0],i.prediction) for i in Prediction.objects.filter(user_id=curr_user.profile.profile_id)]
             print(products, "products else")
@@ -293,7 +293,12 @@ def recotest(request):
 # homepage
 def test(request):
     items = Item.objects.all()
-    reviews = Rate.objects.all()[30]
+    reviews = Rate.objects.all()[50:80]
+    reviewers = [Profile.objects.get(user_id=i.user_id) for i in reviews]
+    reviewers_with_pics = []
+    for i in reviewers:
+        if (i.image != None):
+            reviewers_with_pics.append(i)
     sample = []
     # get 30 good raing items
     for i in items:
@@ -301,10 +306,9 @@ def test(request):
             sample.append(i)
         if len(sample) > 30:
             break
-    print(reviews)
 
 
-    return render(request, 'newindex.html', {'items': items, 'reviews': reviews})
+    return render(request, 'newindex.html', {'items': items, 'reviews': reviews, 'reviewers': reviewers_with_pics})
 
 
 def my_page(request):

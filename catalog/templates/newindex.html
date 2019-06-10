@@ -415,7 +415,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.0 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.0.item_id }}">{{ items.0 }}</a></h4>
                                     <p>Interdum  malesuada fames ac ante ipsum primis in faucibus. Sed sed. </p>
                                 </div>
                             </div><!-- end post-media -->
@@ -430,7 +430,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.1 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.1.item_id }}">{{ items.1 }}</a></h4>
                                     <p>Aliquam erat volutpat. Donec pharetra imperdiet metus, eget cras.</p>
                                 </div>
                             </div><!-- end post-media -->
@@ -445,7 +445,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.2 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.2.item_id }}">{{ items.2 }}</a></h4>
                                     <p>Aenean consectetur semper lorem, sit amet volutpat. </p>
                                 </div>
                             </div><!-- end post-media -->
@@ -460,7 +460,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.3 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.3.item_id }}">{{ items.3 }}</a></h4>
                                     <p>Nunc vitae metus sagittis, pharetra risus non, luctus ligula volutpat. </p>
                                 </div>
                             </div><!-- end post-media -->
@@ -475,7 +475,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.4 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.4.item_id }}">{{ items.4 }}</a></h4>
                                     <p>Proin non mollis orci, quis maximus nisi. In imperdiet neque eu metus. </p>
                                 </div>
                             </div><!-- end post-media -->
@@ -490,7 +490,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.5 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.5.item_id }}">{{ items.5 }}</a></h4>
                                     <p>Etiam fermentum, urna sed varius aliquet, sem enim ultrices arcu amet. </p>
                                 </div>
                             </div><!-- end post-media -->
@@ -505,7 +505,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.6 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.6.item_id }}">{{ items.6 }}</a></h4>
                                     <p>Ut convallis mollis est, eu tincidunt magna varius dignissim. Sed sed.</p>
                                 </div>
                             </div><!-- end post-media -->
@@ -520,14 +520,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">{{ items.7 }}</a></h4>
+                                    <h4><a href="item-detail/{{ items.7.item_id }}">{{ items.7 }}</a></h4>
                                     <p>Ut porttitor aliquet auctor. Donec pellentesque libero et mattis amet. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat1">
                                 <div class="entry">
-                                    <img src= "{% static "images/upload/desc_work_09.png" %}" alt="" class="img-responsive">
+                                    <img src= "{{ items.8.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -535,14 +535,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Sweet Admin Dashboard</a></h4>
+                                    <h4><a href="item-detail/{{ items.8.item_id }}">{{ items.8 }}</a></h4>
                                     <p>Aliquam quis euismod metus, vitae iaculis ipsum. Aliquam non enim sed.</p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat1">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_10.png" %}" alt="" class="img-responsive">
+                                    <img src= "{{ items.9.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -550,14 +550,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Smooth Keyboard Design</a></h4>
+                                    <h4><a href="item-detail/{{ items.9.item_id }}">{{ items.9 }}</a></h4>
                                     <p>Nunc aliquet mi ante. Nulla magna ante, porttitor in sagittis posuere. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat2">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_11.png" %}"alt="" class="img-responsive">
+                                    <img src= "{{ items.10.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -565,14 +565,14 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Click Smart App</a></h4>
+                                    <<h4><a href="item-detail/{{ items.10.item_id }}"> {{ items.10 }}</a></h4>
                                     <p>Vivamus mattis sit amet ipsum vitae pretium. Proin vitae nulla nullam. </p>
                                 </div>
                             </div><!-- end post-media -->
 
                             <div class="post-media pitem item-w1 item-h1 cat3">
                                 <div class="entry">
-                                    <img src="{% static "images/upload/desc_work_12.png" %}" alt="" class="img-responsive">
+                                    <img src= "{{ items.11.image}}" alt="" class="img-responsive">
                                     <div class="magnifier">
                                         <a class="golink" href="#">
                                            <i class="fa fa-link"></i>
@@ -580,7 +580,7 @@
                                     </div><!-- end magnifier -->
                                 </div><!-- end entry -->
                                 <div class="item-desc">
-                                    <h4><a href="#">Gabfire Vector Logo</a></h4>
+                                    <h4><a href="item-detail/{{ items.11.item_id }}">{{ items.11 }}</a></h4>
                                     <p>Maecenas nisl magna, ultricies lobortis tortor vel, dapibus cras amet. </p>
                                 </div>
                             </div><!-- end post-media -->
@@ -755,13 +755,12 @@
                     <div class="col-lg-4 col-md-12">
                         <div class="blog-box">
                             <div class="post-media">
-
-                                <a href="#"><img src="{%static "images/upload/blog_01.jpg" %}" alt="" class="img-responsive"></a>
+                                <a href="#"><img src="{{ reviewers.0.image }}" alt="" class="img-responsive"></a>
                             </div><!-- end media -->
 
                             <div class="blog-desc">
-                                <h4><a href="#">{{ reviews }}</a></h4>
-                                <p>Praesent at suscipit ligula. Suspendisse pre neque, quis suscipit enim. sed maximus, mia auctor.</p>
+                                <h4><a href="{{ reviewers.0.get_absolute_url }}">{{ reviewers.0 }}</a></h4>
+                                <p> {{ reviews.0 }}</p>
                             </div><!-- end blog-desc -->
 
                             <div class="post-meta">
@@ -777,12 +776,12 @@
                     <div class="col-lg-4 col-md-12">
                         <div class="blog-box">
                             <div class="post-media">
-                                <a href="#"><img src="{%static "images/upload/blog_01.jpg" %}"  alt="" class="img-responsive"></a>
+                                <a href="#"><img src="{{ reviewers.1.image }}" alt="" class="img-responsive"></a>
                             </div><!-- end media -->
 
                             <div class="blog-desc">
-                                <h4><a href="#">The most suitable web design</a></h4>
-                                <p>Sed suscipit neque in erat posuere tristique aliquam porta vestibulum. Cras placerat tincidunt. </p>
+                                <h4><a href="{{ reviewers.1.get_absolute_url }}">{{ reviewers.1 }}</a></h4>
+                                <p> {{ reviews.1 }}</p>
                             </div><!-- end blog-desc -->
 
                             <div class="post-meta">
@@ -798,12 +797,12 @@
                     <div class="col-lg-4 col-md-12">
                         <div class="blog-box">
                             <div class="post-media">
-                                <a href="#"><img src="{%static "images/upload/blog_01.jpg" %}"  alt="" class="img-responsive"></a>
+                                <a href="#"><img src="{{ reviewers.2.image }}" alt="" class="img-responsive"></a>
                             </div><!-- end media -->
 
                             <div class="blog-desc">
-                                <h4><a href="#">Design for all mobile devices</a></h4>
-                                <p>Suspendisse scelerisque ex ac mattis molestie vel enim ut massa placerat faucibus sed ut dui vivamus. </p>
+                                <h4><a href="{{ reviewers.2.get_absolute_url }}">{{ reviewers.2 }}</a></h4>
+                                <p> {{ reviews.2 }}</p>
                             </div><!-- end blog-desc -->
 
                             <div class="post-meta">
@@ -891,7 +890,8 @@
                                     <li><a href="shop-checkout.html">Checkout</a></li>
                                     <li><a href="shop-cart.html">Shopping Cart</a></li>
                                     <li><a href="shop-account.html">My Account</a></li>
-                                    <li><a href="/accounts/signup">Login / Register</a></li>
+                                    <li><a href="/accounts/login">Login</a></li>
+                                    <li><a href="/accounts/signup">Signup</a></li>
                                 </ul>
                             </div><!-- end list-widget -->
                         </div><!-- end widget -->
