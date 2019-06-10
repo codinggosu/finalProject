@@ -9,7 +9,6 @@
 <ul>
     {% for user in users %}
 
-
     <div style="border: thin solid black;" >
         <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVBqHgTyJvjMHQdujR7NeI22uf-Bj_qPy2AHierD1OUkgZOdJSnw"> -->
         <!-- {{ rate.get_user.image }} -->
@@ -18,13 +17,20 @@
         성별 : {{ user.gender }}
     <p> 피부 타입 : {{ user.skin_type}}</p>
         <p> 최근 리뷰 : {{ user.get_written_reviews.review }}</p>
+        <p></p>
     </div>
     <div align="left" display= "inline-block" >
     <img src ="{{ user.image }}" style='height: 10%; width: 10%; object-fit: contain; position: relative; right: 0;'>
     </div>
+        <form action="add_friend" method="post">{% csrf_token %}
+        <input type="integer" value="{{ user.profile_id }}" name="profile_id" style="color:transparent; border:none"  >
+        <button type="sumbit" value="submit"> Follow </button>
+        </form>
     </div>
     <br>
+
     {% endfor %}
+
 </ul>
 {% else %}
 <p>no friends</p>

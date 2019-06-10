@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 # Create your views here.
-from .models import Item, Rate, Profile, Prediction, Candidates2
+from .models import Item, Rate, Profile, Prediction, Candidates2, Follow
 from django.views import generic
 from catalog.forms import RateForm
 from django.http import HttpResponse
@@ -213,6 +213,25 @@ def recommended_friends(request):
     return render(request, "recommended_friends.html", context=context)
 
 
+def add_friend(request):
+    if request.POST:
+        following = int(request.POST.get('profile_id'))
+        follower = int(request.user.id)
+        obj = Follow(follower=follower,
+                     following=following)
+        obj.save()
+        followings = Follow.objects.filter(follower=follower)
+        print(followings)
+        datas = []
+        for user in followings:
+            datas.append(get_object_or_404(Profile, profile_id=user.following))
+        context = {
+            "users": datas
+            }
+        return render(request, "friendreview.html", context=context)
+
+
+
 def sign_up(request):
     if request.POST:
         if Profile.objects.filter(profile_id=int(request.POST.get('user_id'))):
@@ -251,16 +270,14 @@ def all_items(request):
 
 
 def friend_review(request):
-    profile_id = int(request.user.id)
-    user_from = get_object_or_404(Profile, profile_id=profile_id)
-    users = user_from.user_from.all()
-    print(users)
+    follower = int(request.user.id)
+    followings = Follow.objects.filter(follower=follower)
+    print(followings)
     datas = []
-    for user in users[0].user_to.all():
-        datas.append(user.user_id)
-    friends = [get_object_or_404(Profile, profile_id=profile_id) for profile_id in datas]
+    for user in followings:
+        datas.append(get_object_or_404(Profile, profile_id=user.following))
     context = {
-        "users": friends
+        "users": datas
     }
     return render(request, "friendreview.html", context=context)
 
