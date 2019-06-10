@@ -26,7 +26,7 @@
     <p> Brand: {{ product.0.brand }} </p>
     <p> Score: {{ product.0.get_avgscore }} </p>
     <p> Reviewed {{ product.0.get_numberof_reviews }} times </p>
-    <p> Expected Rating: {{ product.1 }}
+    <p> Expected Rating: {{ product.1 |floatformat }}
     </div>
     {% endfor %}
 </div>
