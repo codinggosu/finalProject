@@ -26,6 +26,5 @@ urlpatterns = [
     # path('profile-detail/<int:profile_id>', views.ProfileDetailView.as_view(), name='profile-detail'),
     path('profile-detail/<int:profile_id>', views.profile_detail, name='profile-detail'),
     path('sample/<int:pk>', views.sample, name='sample'),
-
-
+    path('recotest', views.recotest, name='recotest'),
 ]

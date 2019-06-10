@@ -1,0 +1,59 @@
+{% extends "newindex.html" %}
+
+{% block content %}
+<!-- {% for cosmetic in items %}
+<img src="{{ cosmetic.3 }}">
+<a href="item-detail/{{ cosmetic.0 }}"> {{ cosmetic.1 }} </a>
+<p> Brand: {{ cosmetic.2 }} </p>
+{% endfor %} -->
+
+<!-- <div  class="col-sm-10" > -->
+<div align="center">
+    <h2 style="font-style:italic;" > Just Something our machine learning magic cooked up, hope you like it!!</h2>
+    <br>
+    <br>
+
+</div>
+<div>
+
+    {% for product in products %}
+    <!-- <img src="{{ product.image }}" > -->
+    <div style="float:left;">
+    <a href="item-detail/{{ product.0.item_id }}">
+    <img border="0" src="{{ product.0.image }}"">
+    </a>
+    <p> {{ product.0.name|truncatechars:15 }}</p>
+    <p> Brand: {{ product.0.brand }} </p>
+    <p> Score: {{ product.0.get_avgscore }} </p>
+    <p> Reviewed {{ product.0.get_numberof_reviews }} times </p>
+    <p> Expected Rating: {{ product.1 }}
+    </div>
+    {% endfor %}
+</div>
+
+
+
+{% endblock %}
+
+{% block footer %}
+
+<div class="pagination" style="position:relative; bottom:1px;">
+    <span class="step-links">
+        <footer>
+        {% if products.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ contacts.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+        </span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">next</a>
+            <a href="?page={{ products.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </footer>
+    </span>
+</div>
+{% endblock %}

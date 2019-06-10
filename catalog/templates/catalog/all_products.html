@@ -7,14 +7,22 @@
 <p> Brand: {{ cosmetic.2 }} </p>
 {% endfor %} -->
 
-<div >
+<!-- <div  class="col-sm-10" > -->
+<div align="center">
+    <h2 style="font-style:italic;" >Explore our <mark>vast</mark> selection of products!!</h2>
+    <br>
+    <br>
+
+</div>
+<div>
+
     {% for product in products %}
     <!-- <img src="{{ product.image }}" > -->
     <div style="float:left;">
     <a href="item-detail/{{ product.item_id }}">
     <img border="0" src="{{ product.image }}"">
     </a>
-    <p>{{ product.name }} </p>
+    <p>{{ product.na|truncatechars:15 }} </p>
     <p> Brand: {{ product.brand }} </p>
     <p> Score: {{ product.get_avgscore }} </p>
     <p> Reviewed {{ product.get_numberof_reviews }} times </p>
@@ -24,14 +32,13 @@
 
 
 
-
 {% endblock %}
 
 {% block footer %}
-<br>
-<div class="pagination" style="position:relative; bottom:1px;">
 
+<div class="pagination" style="position:relative; bottom:1px;">
     <span class="step-links">
+        <footer>
         {% if products.has_previous %}
             <a href="?page=1">&laquo; first</a>
             <a href="?page={{ contacts.previous_page_number }}">previous</a>
@@ -45,6 +52,7 @@
             <a href="?page={{ products.next_page_number }}">next</a>
             <a href="?page={{ products.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
+    </footer>
     </span>
 </div>
 {% endblock %}

@@ -23,7 +23,7 @@ from django.http import HttpResponseRedirect
 from .forms import ReviewForm
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
-
+from django.contrib import messages
 
 
 def index(request):
@@ -247,6 +247,49 @@ def all_items(request):
     # print(context)
     return render(request, 'catalog/all_products.html', context)
 
+
+
+def recotest(request):
+    # print(recommend(profile_id))
+    lst = []
+    if not request.user.is_authenticated:
+        print("Not logged in")
+        return redirect("/accounts/login/")
+    else:
+        curr_user = request.user
+        if not Prediction.objects.filter(user_id=curr_user.profile.profile_id).exists():
+            recommendations = recommend(curr_user.profile.profile_id)
+            products = [(Item.objects(filter(item_id=i[0])),i[1]) for i in recommendations]
+            # recommendations = Prediction.objects.filter(user_id=curr_user.profile.profile_id)
+            # products = [(Item.objects(filter(item_id=i[0])),i[1]) for i in recommendations]
+            print(products, "first if")
+            if len(products)==0:
+                print("user has not entered any reviews, therefore unable to return recommendations")
+                # maybe give top 20 best selling products
+        else:
+            products = [(Item.objects.filter(item_id=i.item_id)[0],i.prediction) for i in Prediction.objects.filter(user_id=curr_user.profile.profile_id)]
+            print(products, "products else")
+        # lst = [ i.item_id for i in product_recommendations]
+        # print(lst)
+
+    context = {"products": products}
+    return render(request, "catalog/recommended_products.html", context)
+
+
+        # recommended_products = [i[0] for i in recommend(curr_profile.profile_id)]
+        # print(recommend_products, "answer")
+        # for i in recommended_products:
+        #     print(Item.objects.filter(item_id=i))
+
+
+
+
+
+
+
+
+
+
 # homepage
 def test(request):
     items = Item.objects.all()
@@ -265,7 +308,13 @@ def test(request):
 
 
 def my_page(request):
-  return render(request, 'catalog/mypage.html')
+    curr_user = request.user
+    if not curr_user.is_authenticated:
+        messages.info(request, 'Your password has been changed successfully!')
+        return render(request, '/accounts/login.html')
+    else:
+        context = Profile.objects.filter(profile_id = curr_user.profile.profile_id)[0]
+        return render(request, 'catalog/mypage.html', {'context': context})
 
 
 def social(request):
