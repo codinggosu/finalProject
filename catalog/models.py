@@ -59,7 +59,7 @@ class Rate(models.Model):
     def get_url(self):
         return 'item-detail/'+ str(self.item_id)
 
-        
+
     def get_user(self):
         return Profile.objects.get(profile_id=self.user_id)
     def get_item(self):
@@ -78,7 +78,12 @@ class Profile(models.Model):
     nickname = models.CharField(max_length=20, default='anonymous')
     image = models.TextField(null=True)
     candidates = models.ManyToManyField("self", symmetrical=False, blank=True)
+<<<<<<< HEAD
 #    followings = models.ManyToManyField("self", symmetrical=False, blank=True)
+=======
+    # profile_pic = models.ImageField(upload_to='images/', null=True)
+
+>>>>>>> 8bf8d1e9fc0379e09aa2dbffae183b90de396223
 
     def get_absolute_url(self):
         return reverse('profile-detail', args=[str(self.profile_id)])

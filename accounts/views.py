@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from catalog.models import Profile
 # Create your views here.
-
+from django.core.files.storage import FileSystemStorage
 
 def signup(request):
     if request.method == "POST":
@@ -19,6 +19,13 @@ def signup(request):
             newprofile.age = request.POST["age"]
             newprofile.profile_id = user.id
             newprofile.user = user
+            # myfile = request.FILES['profile_pic']
+            # fs = FileSystemStorage()
+            # filename = fs.save("1234", myfile)
+            # uploaded_file_url = fs.url(filename)
+            # if request.POST["profile_pic"]:
+            # newprofile.profile_pic = request.FILES["profile_pic"]
+
             newprofile.save()
             print(newprofile)
             user.profile = newprofile

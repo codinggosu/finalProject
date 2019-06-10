@@ -5,7 +5,7 @@
 <div class="container">
     <h1>sign up!</h1>
 
-    <form method="POST" action="{% url 'signup' %}">
+    <form method="POST" action="{% url 'signup' %}" enctype="multipart/form-data">
         {% csrf_token %}
         Username(ID):
         <br>
@@ -36,6 +36,10 @@
         NickName:
         <br>
         <input name="nickname" type="text">
+        <br>
+        <!-- Profile picture: -->
+        <br>
+        <!-- <input name="profile_pic" type= "file"> -->
         <br>
         <br>
         <input type="submit" class="btn btn-primary" value="sign up">

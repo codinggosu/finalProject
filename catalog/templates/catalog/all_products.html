@@ -8,10 +8,18 @@
 {% endfor %} -->
 
 <!-- <div  class="col-sm-10" > -->
+{% if messages %}
+<ul>
+	{% for message in messages %}
+	   <li>{{ message }}</li>
+	{% endfor %}
+</ul>
+{% endif %}
 <div align="center">
     <h2 style="font-style:italic;" >Explore our <mark>vast</mark> selection of products!!</h2>
     <br>
     <br>
+
 
 </div>
 <div>
