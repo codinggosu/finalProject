@@ -16,16 +16,15 @@ urlpatterns = [
     path('test', views.test, name='test'),
     path('mypage', views.my_page, name='my_page'),
     path('social', views.social, name='social'),
-    path('friend_review', views.friend_review, name='friend_review'),
+    path('friend_review', views.friend_review, name='friendreview'),
     path('rate-detail/<int:pk>', views.RateDetailView.as_view(), name='rate-detail'),
     path('allitems', views.all_items, name='allitems'),
     path('item-detail/<int:pk>', views.test_form, name='item-detail'),
-    path('friend', views.friend, name='friend'),
-    path('recommended_friends', views.recommended_friends, name='recommended_friends'),
     path('test-form/<int:pk>', views.ItemDetailView.as_view(), name='test_form'),
     # path('profile-detail/<int:profile_id>', views.ProfileDetailView.as_view(), name='profile-detail'),
     path('profile-detail/<int:profile_id>', views.profile_detail, name='profile-detail'),
     path('sample/<int:pk>', views.sample, name='sample'),
+    path('recommend_friends', views.recommend_friends, name='recommend_friends'),
     path('recotest', views.recotest, name='recotest'),
     
 ]
