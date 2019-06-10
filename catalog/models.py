@@ -49,7 +49,7 @@ class Rate(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.review[:20] + " ... "
+        return str(self.user_id)
 
     def get_absolute_url(self):
 

@@ -23,12 +23,14 @@ from django.http import HttpResponseRedirect
 from .forms import ReviewForm
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 
 def index(request):
     """View function for home page of site."""
     item = Item.objects.all().count()
+
     user = Profile.objects.all().count()
     rate = Rate.objects.all().count()
     num_visits = request.session.get('num_visits', 1)
@@ -52,8 +54,10 @@ class ItemListView(generic.ListView):
 class ItemDetailView(generic.DetailView):
     model = Item
 
+
 class ProfileDetailView(generic.DetailView):
     model = Profile
+
 
 class ProfileListView(generic.ListView):
     model = Profile
@@ -63,6 +67,7 @@ class ProfileListView(generic.ListView):
 class RateListView(generic.ListView):
     model = Rate
     paginate_by = 10
+
 
 class RateDetailView(generic.DetailView):
     model = Rate
@@ -77,11 +82,11 @@ def save_rate(request):
     if request.POST:
         print("okay")
         print(request.POST)
-        if Rate.objects.filter(user_id=int(request.POST.get('content[user_id]')), item_id=int(request.POST.get('content[item_id]'))):
+        if Rate.objects.filter(user_id=int(request.user), item_id=int(request.POST.get('content[item_id]'))):
             print("이미 입력된 데이터입니다.")
             pass
         else:
-            obj = Rate(user_id=int(request.POST.get('content[user_id]')),
+            obj = Rate(user_id=int(request.user),
                        item_id=int(request.POST.get('content[item_id]')),
                        rate=int(request.POST.get('content[rate]')))
             obj.save()
@@ -105,7 +110,7 @@ def get_top_n(predictions, n, given_user_id):
 
 
 def recommend(given_user_id):
-    given_user_id = int(given_user_id)
+    given_user_id = int(get_object_or_404(User, username=given_user_id).id)
     print(given_user_id)
     queryset = Rate.objects.all()
     query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
@@ -136,7 +141,7 @@ def recommend(given_user_id):
 def prediction(request):
     return render(request, "prediction.html")
 
-
+@login_required
 def prediction_result(request):
     user_id = request.POST.get('uid')
     print(user_id)
@@ -151,7 +156,7 @@ def prediction_result(request):
     return render(request, "prediction_result.html", context=context)
 
 
-def recommend_friend(given_user_id):
+def recommend_friends(request):
     queryset = Rate.objects.all()
     query, params = queryset.query.as_sql(compiler='django.db.backends.sqlite3.compiler.SQLCompiler', connection=connections['default'])
     df = pd.read_sql_query(query, con=connections['default'], params=params)
@@ -162,53 +167,51 @@ def recommend_friend(given_user_id):
     sim_options = {'name': 'pearson_baseline'}
     algo = KNNBaseline(sim_options=sim_options)
     algo.fit(trainset)
-    print(given_user_id)
-    given_user_id = int(given_user_id)
-    _from = get_object_or_404(Profile, user_id=given_user_id)
-    inner_id = algo.trainset.to_inner_uid(given_user_id)
-#    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
-    neighbors = algo.get_neighbors(inner_id, k=5)
-    results = [algo.trainset.to_raw_uid(inner_user_id) for inner_user_id in neighbors]
-    print('The 5 nearest neighbors of Given User Id:')
+    for given_user_id in set(df['user_id']):
+        print(given_user_id)
+        given_user_id = int(given_user_id)
+        _from = get_object_or_404(Profile, profile_id=given_user_id)
+        inner_id = algo.trainset.to_inner_uid(given_user_id)
+    #    to_inner_uid(), to_inner_iid(), to_raw_uid(), and to_raw_iid()
+        neighbors = algo.get_neighbors(inner_id, k=5)
+        results = [algo.trainset.to_raw_uid(inner_user_id) for inner_user_id in neighbors]
+        print('The 5 nearest neighbors of Given User Id:')
 
-    for raw_user_id in results:
-        _to = get_object_or_404(Profile, user_id=int(raw_user_id))
-        # print(raw_user_id,Candidates2.objects.filter(user_from=user_from,user_to=user_to))
-        if Candidates2.objects.filter(user_from=_from):
-            if Candidates2.objects.filter(user_from=_from, user_to=_to):
-                print("user from , to 다 일치")
-                pass
+        for raw_user_id in results:
+            _to = get_object_or_404(Profile, user_id=int(raw_user_id))
+            # print(raw_user_id,Candidates2.objects.filter(user_from=user_from,user_to=user_to))
+            if Candidates2.objects.filter(user_from=_from):
+                if Candidates2.objects.filter(user_from=_from, user_to=_to):
+                    print("user from , to 다 일치")
+                    pass
+                else:
+                    cand = Candidates2.objects.get(user_from=_from)
+                    cand.user_to.add(_to)
+                    print("user from만 일치, to 추가")
             else:
-                cand = Candidates2.objects.get(user_from=_from)
+                cand=Candidates2.objects.create()
+                cand.user_from.add(_from)
                 cand.user_to.add(_to)
-                print("user from만 일치, to 추가")
-        else:
-            cand=Candidates2.objects.create()
-            cand.user_from.add(_from)
-            cand.user_to.add(_to)
-        print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
-    return results
+            print("해당 유저 %s 에 대한 데이터 저장완료" % given_user_id)
+    return render(request, "recommend_completed.html")
 
 
-def friend(request):
-    return render(request, "friend.html")
-
-
-def recommended_friends(request):
-    user_id = request.POST.get('uid')
-    print(user_id)
-    recommend_friend(user_id)
-    user_from = get_object_or_404(User, user_id=user_id)
+@login_required
+def friend_review(request):
+    profile_id = int(request.user.id)
+    print(profile_id)
+    user_from = get_object_or_404(Profile, profile_id=profile_id)
+    print("y")
     users = user_from.user_from.all()
+    print("x")
     datas = []
     for user in users[0].user_to.all():
         datas.append(user.user_id)
-    friends = [get_object_or_404(User, user_id=user_id) for user_id in datas]
+    friends = [get_object_or_404(Profile, profile_id=profile_id) for profile_id in datas]
     context = {
         "users": friends
     }
-
-    return render(request, "recommended_friends.html", context=context)
+    return render(request, "friendreview.html", context=context)
 
 
 def sign_up(request):
@@ -271,9 +274,6 @@ def my_page(request):
 def social(request):
     return render(request, 'catalog/social.html')
 
-def friend_review(request):
-    rate = Rate.objects.all().count()
-    return render(request, 'catalog/friendreview.html')
 
 def sample(request,pk):
     user = User.objects.filter(username='testing')[0]
