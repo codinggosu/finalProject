@@ -197,7 +197,7 @@ def recommend_friends(request):
 
 
 @login_required
-def friend_review(request):
+def recommended_friends(request):
     profile_id = int(request.user.id)
     print(profile_id)
     user_from = get_object_or_404(Profile, profile_id=profile_id)
@@ -211,7 +211,7 @@ def friend_review(request):
     context = {
         "users": friends
     }
-    return render(request, "friendreview.html", context=context)
+    return render(request, "recommended_friends.html", context=context)
 
 
 def sign_up(request):
@@ -249,6 +249,21 @@ def all_items(request):
     }
     # print(context)
     return render(request, 'catalog/all_products.html', context)
+
+
+def friend_review(request):
+    profile_id = int(request.user.id)
+    user_from = get_object_or_404(Profile, profile_id=profile_id)
+    users = user_from.user_from.all()
+    print(users)
+    datas = []
+    for user in users[0].user_to.all():
+        datas.append(user.user_id)
+    friends = [get_object_or_404(Profile, profile_id=profile_id) for profile_id in datas]
+    context = {
+        "users": friends
+    }
+    return render(request, "friendreview.html", context=context)
 
 
 

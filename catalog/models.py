@@ -78,13 +78,13 @@ class Profile(models.Model):
     nickname = models.CharField(max_length=20, default='anonymous')
     image = models.TextField(null=True)
     candidates = models.ManyToManyField("self", symmetrical=False, blank=True)
+#    followings = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     def get_absolute_url(self):
         return reverse('profile-detail', args=[str(self.profile_id)])
 
     def get_written_reviews(self):
-        return Rate.objects.filter(user_id=self.profile_id)
-
+        return Rate.objects.filter(user_id=self.profile_id).order_by('-created_at')[0]
 
     def __str__(self):
         """String for representing the Model object."""
@@ -102,6 +102,10 @@ class Prediction(models.Model):
     user_id = models.IntegerField(null=True)
     item_id = models.IntegerField(null=True)
 
+
+class Follow(models.Model):
+    follower = models.IntegerField(blank=False)
+    following = models.IntegerField(blank=False)
 
 #functionality:
 #fast prediction
