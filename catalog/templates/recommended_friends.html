@@ -20,7 +20,7 @@
         <p></p>
     </div>
     <div align="left" display= "inline-block" >
-    <img src ="{{ user.image }}" style='height: 10%; width: 10%; object-fit: contain; position: relative; right: 0;'>
+    <img src ="{{ user.image_url }}" style='height: 10%; width: 10%; object-fit: contain; position: relative; right: 0;'>
     </div>
         <form action="add_friend" method="post">{% csrf_token %}
         <input type="integer" value="{{ user.profile_id }}" name="profile_id" style="color:transparent; border:none"  >

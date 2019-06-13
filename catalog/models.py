@@ -76,7 +76,7 @@ class Profile(models.Model):
     skin_type = models.CharField(max_length=10)
     age = models.FloatField(null=True)
     nickname = models.CharField(max_length=20, default='anonymous')
-    image = models.TextField(null=True)
+    image = models.TextField(null=True, default='')
     candidates = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     def get_absolute_url(self):
@@ -84,6 +84,13 @@ class Profile(models.Model):
 
     def get_written_reviews(self):
         return Rate.objects.filter(user_id=self.profile_id).order_by('-created_at')
+
+    def image_url(self):
+        if self.image:
+            image_url = self.image
+        else:
+            image_url = '/static/images/default_profile_image.jpg'
+        return image_url
 
     def __str__(self):
         """String for representing the Model object."""
