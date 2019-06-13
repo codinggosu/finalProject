@@ -66,6 +66,7 @@ class ProfileListView(generic.ListView):
 class RateListView(generic.ListView):
     model = Rate
     paginate_by = 10
+    ordering = ['-created_at']
 
 
 
