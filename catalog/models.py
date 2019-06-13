@@ -85,6 +85,9 @@ class Profile(models.Model):
     def get_written_reviews(self):
         return Rate.objects.filter(user_id=self.profile_id).order_by('-created_at')
 
+    def get_written_review(self):
+        return Rate.objects.filter(user_id=self.profile_id).order_by('-created_at')[0]
+
     def image_url(self):
         if self.image:
             image_url = self.image
